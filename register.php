@@ -16,7 +16,7 @@
 <header>
 	<nav>
 		<ul>
-			<li><a href="./index.html">Home</a></li>
+			<li><a href="./index.php">Home</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>
@@ -29,7 +29,7 @@
 		<?php echo displayError(); ?>
 		<div class="input-group">
 			<label>E-mail address</label>
-			<input type="text" name="email" value="">
+			<input type="text" name="email" value="<?php echo $email; ?>">
 		</div>
 		<div class="input-group">
 			<label>Password</label>
@@ -42,11 +42,11 @@
 		<h3>Address</h3>
 		<div class="input-group">
 			<label>Street</label>
-			<input type="text" name="street" value="">
+			<input type="text" name="street" value="<?php echo $street; ?>">
 		</div>
 		<div class="input-group">
 			<label>City</label>
-			<input type="text" name="city" value="">
+			<input type="text" name="city" value="<?php echo $city; ?>">
 		</div>
 		<div class="input-group">
 			<label>Province</label>
@@ -69,11 +69,11 @@
 		</div>
 		<div class="input-group">
 			<label>Postal code</label>
-			<input type="text" name="postal" value="">
+			<input type="text" name="postal" value="<?php echo $postal; ?>">
 		</div>
 		<div class="input-group">
 			<label>Phone number</label>
-			<input type="text" name="phoneNum" value="">
+			<input type="text" name="phoneNum" value="<?php echo $phoneNum; ?>">
 		</div>
 		<h3>Credit card info</h3>
 		<div class="input-group">

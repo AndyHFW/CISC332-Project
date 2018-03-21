@@ -33,10 +33,10 @@
 
 			<div>
 				<?php  if (isset($_SESSION['user'])) : ?>
-					<strong><?php echo $_SESSION['user']['email']; ?></strong>
+					<strong><?php echo $_SESSION['user']['Email']; ?></strong>
 
 					<small>
-						<i  style="color: #888;">(<?php echo ucfirst($_SESSION['user']['userType']); ?>)</i> 
+						<i  style="color: #888;">(<?php echo ucfirst($_SESSION['user']['UserType']); ?>)</i> 
 						<br>
 						<a href="index.php?logout='1'" style="color: red;">logout</a>
 					</small>
