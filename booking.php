@@ -23,10 +23,16 @@
 	</nav>
 </header>
 <body>
+	<div id="bookingInfo">
+		<?php
+			
+		?>
+	</div>
 	<div id="complexDisplay">
 		<?php getComplexes(); ?>
 	</div>
 	<div id="movieDisplay"></div>
+	<div id="buyTickets"></div>
 	<div id="error"></div>
 </body>
 </html>
