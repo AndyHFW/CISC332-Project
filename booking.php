@@ -11,6 +11,7 @@
 <html>
 <head>
 	<title>Home</title>
+	<script src="xmlscript.js"></script>
 	<!--<link rel="stylesheet" type="text/css" href="style.css">-->
 </head>
 <header>
@@ -22,6 +23,10 @@
 	</nav>
 </header>
 <body>
-	<?php getComplexes(); ?>
+	<div id="complexDisplay">
+		<?php getComplexes(); ?>
+	</div>
+	<div id="movieDisplay"></div>
+	<div id="error"></div>
 </body>
 </html>

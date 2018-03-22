@@ -1,3 +1,9 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="jquery-3.2.1.min.js"></script>
+</head>
+
 <?php
 session_start();
 
@@ -168,8 +174,8 @@ function getComplexes() {
 	$query = "SELECT * FROM `theatre complex`";
 	$result = mysqli_query($db, $query);
 	$complexName = "";
+	$complexNum = 0;
 	echo "
-	<div class=\"complexes\">
 	<table>
 		<tr>
 		<th>Complex Name</th>
@@ -184,37 +190,47 @@ function getComplexes() {
 			echo "<td>" . $row['NumTheatres'] . "</td>";
 			echo "<td>" . $row['Street'] . "<br/> " . $row['City'] . ", " . $row['Province'] . "<br/> " . $row['Postal'] . "</td>";
 			echo "<td>" . $row['PhoneNum'] . "</td>";
-		echo "<td><button type=\"button\" name=\"complex" . $complexName . " onclick=\"complexSelect(" . $complexName . ")\"\">Select Complex</button></td>";
+			echo "<td><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showMovies('" . $complexName . "')\">Select Complex</button></td>";
 			echo "</tr>";
+			$complexNum++;
 		}
-	echo "</table>
-	</div>";
+	echo "</table>";
 }
 
-function getTheatres($complexName) {
+function showMovies($complexName) {
 	global $db;
 	
-	$query = "SELECT MovTitle, ThNum, ST FROM theatre WHERE ComplName = '" . $complexName . "' AND SD<='" . date("Y-m-d") . "' AND ED>='" . date("Y-m-d") . "'";
+	$query = "SELECT s.MovTitle, s.ThNum, s.ST, s.ED, t.MaxSeat, t.ScreenSize FROM showtime AS s JOIN theatre AS t ON 
+			s.ComplName = t.CplName AND s.ThNum = t.TheatreNum WHERE s.ComplName= '" . $complexName . "' AND ED>='" . date("Y-m-d") . "'";
 	$result = mysqli_query($db, $query);
 	//$complexNum = 0;
-	echo "
-	<div class=\"theatres\">
-	<caption>" . $complexName . "</caption>
-	<table>
-		<tr>
-		<th>Theatre Number</th>
-		<th>Max Seating</th>
-		<th>Screen Size</th>
-		</tr>";
-		while($row = mysqli_fetch_array($result)) {
-			echo "<tr>";
-			echo "<td>" . $row['TheatreNum'] . "</td>";
-			echo "<td>" . $row['MaxSeat'] . "</td>";
-			echo "<td>" . $row['ScreenSize'] . "</td>";
-			echo "<td><button type=\"button\" name=\"complex" . $complexNum . " onclick=\"complexSelect(" . $complexNum . ")\"\">Select Complex</button></td>";
-			echo "</tr>";
+	if (!$result) {
+		echo "No movies are currently scheduled at this complex! Please select another complex.";
+	} else {
+		echo "
+		<caption>" . $complexName . "</caption>
+		<table>
+			<tr>
+			<th>Theatre Number</th>
+			<th>Movie</th>
+			<th>Showtime</th>
+			<th>Max Seating</th>
+			<th>Screen Size</th>
+			<th>Shows until</th>
+			</tr>";
+			while($row = mysqli_fetch_array($result)) {
+				echo "<tr>";
+				echo "<td>" . $row['ThNum'] . "</td>";
+				echo "<td>" . $row['MovTitle'] . "</td>";
+				echo "<td>" . $row['ST'] . "</td>";
+				echo "<td>" . $row['MaxSeat'] . "</td>";
+				echo "<td>" . $row['ScreenSize'] . "</td>";
+				echo "<td>" . $row['ED'] . "</td>";
+				//echo "<td><button type=\"button\" name=\"complex" . $complexNum . " onclick=\"complexSelect(" . $complexNum . ")\"\">Select Complex</button></td>";
+				echo "</tr>";
+			}
+		echo "</table>";
 		}
-	echo "</table>
-	</div>";
 }
 ?>
+</html>
