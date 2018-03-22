@@ -199,17 +199,18 @@ function getComplexes() {
 function showMovies($complexName) {
 	global $db;
 	
-	$query = "SELECT s.MovTitle, s.ThNum, s.ST, s.ED, t.MaxSeat, t.ScreenSize, SUM(r.NumTickets) AS \"TicketsSold\" 
+	$query = "SELECT s.MovTitle, s.ThNum, s.ST, s.ED, t.MaxSeat, t.ScreenSize
 				FROM showtime AS s 
 				JOIN theatre AS t ON s.ComplName = t.CplName AND s.ThNum = t.TheatreNum 
 				JOIN reservation AS r ON s.MovTitle = r.MovTitle AND s.ComplName = r.CplName 
 					AND s.ThNum = r.ThrNum AND s.ST = r.ST AND s.SD<=r.Date AND s.ED>=r.Date
 				WHERE s.ComplName= '" . $complexName . "' AND ED>='" . date("Y-m-d") . "'
-				GROUP BY s.MovTitle, r.Date;";
+				GROUP BY s.MovTitle;";
 	$result = mysqli_query($db, $query);
 	//$complexNum = 0;
 	if (!$result) {
 		echo "No movies are currently scheduled at this complex! Please select another complex.";
+		echo $query;
 	} else {
 		echo "
 		<caption>" . $complexName . "</caption>
@@ -218,18 +219,17 @@ function showMovies($complexName) {
 			<th>Theatre Number</th>
 			<th>Movie</th>
 			<th>Showtime</th>
-			<th>Seats Remaining</th>
+			<th>Capacity per showing</th>
 			<th>Screen Size</th>
 			<th>Shows until</th>
 			</tr>";
 			while($row = mysqli_fetch_array($result)) {
-				$seatsLeft = $row['MaxSeat']-$row['TicketsSold'];
-				$showingInfo = $row['MovTitle'] . '~' . $complexName . '~' . $row['ThNum'] . '~' . $row['ST'] . '~' . $row['ED'] . '~' . $seatsLeft;
+				$showingInfo = $row['MovTitle'] . '~' . $complexName . '~' . $row['ThNum'] . '~' . $row['ST'] . '~' . $row['ED'] . '~' . $row['MaxSeat'];
 				echo "<tr>";
 				echo "<td>" . $row['ThNum'] . "</td>";
 				echo "<td>" . $row['MovTitle'] . "</td>";
 				echo "<td>" . $row['ST'] . "</td>";
-				echo "<td>" . $seatsLeft . "</td>";
+				echo "<td>" . $row['MaxSeat'] . "</td>";
 				echo "<td>" . $row['ScreenSize'] . "</td>";
 				echo "<td>" . $row['ED'] . "</td>";
 				echo "<td><button type=\"button\" class=\"buyTicket\" onclick=\"buyTicket('" . $showingInfo . "')\"\">Buy Tickets</button></td>";
@@ -239,7 +239,7 @@ function showMovies($complexName) {
 		}
 }
 
-function showTickets($showingInfo) {
+function showTickets($showingInfo, $infoString) {
 	//showingInfo[0] = MovTitle
 	//showingInfo[1] = CplName
 	//showingInfo[2] = ThNum
@@ -254,13 +254,29 @@ function showTickets($showingInfo) {
 		Complex: " . $showingInfo[1] . "<br/>
 		Theatre Number: " . $showingInfo[2] . "<br/>
 		Start Time: " . $showingInfo[3] . "<br/>
-		Seats Remaining: " . $showingInfo[5] . "<br/>
+		Max Capacity: " . $showingInfo[5] . "<br/>
 	</div>
-	<form method=\"post\" action=\"ticketConfirm.php\">
-		<label>Date</label>
-		<input type=\"date\" name=\"date\" value=\"" . date("Y-m-d") . "\" max=\"" . $showingInfo[4] . "\">
+	<form onsubmit=\"return false;\" method=\"post\" name=\"dateForm\">
+		<label>Choose Date: </label>
+		<input type=\"date\" id=\"chosenDate\" name=\"date\" value=\"" . date("Y-m-d") . "\" max=\"" . $showingInfo[4] . "\">
+		<input type=\"hidden\" id=\"hideShowingInfo\" name=\"hideShowingInfo\" value=\"{$infoString}\">
+		<button type=\"submit\" name=\"chooseDateButton\" onclick=\"chooseDateFunction()\">Choose Date</button>
+	</form>";
+}
+
+function buyTickets($showingInfo) {
+	global $db;
+	$query = "SELECT NumTickets, Date
+				FROM reservation
+				WHERE Date='{$showingInfo[6]}' AND MovTitle='{$showingInfo[0]}' AND CplName='{$showingInfo[1]}' AND ThrNum='{$showingInfo[2]}' AND ST='{$showingInfo[3]}';";
+	$result = mysqli_query($db, $query);
+	$row = mysqli_fetch_array($result);
+	$seatsRemaining = $showingInfo[5] - $row['NumTickets'];
+	echo "Showing on {$showingInfo[6]} <br/>Seats Remaining: {$seatsRemaining}<br/>";
+	echo "<form method=\"post\" action=\"ticketConfirm.php\">
 		<label>Number of tickets</label>
-		<input type=\"number\" name=\"numTickets\" min=\"1\" max=\"" . $showingInfo[5] . "\">
+		<input type=\"number\" name=\"numTickets\" min=\"1\" max=\"{$seatsRemaining}\">
+		<input type=\"hidden\" name=\"dateHidden\" value=\"{$showingInfo[6]}\">
 		<input type=\"hidden\" name=\"MovTitle\" value=\"" . $showingInfo[0] . "\">
 		<input type=\"hidden\" name=\"CplName\" value=\"" . $showingInfo[1] . "\">
 		<input type=\"hidden\" name=\"ThNum\" value=\"" . $showingInfo[2] . "\">
@@ -274,12 +290,12 @@ function showTickets($showingInfo) {
 function confirmBooking() {
 	global $db;
 	$accNum = $_SESSION['user']['AccNum'];
-	$movie = escape($_POST['MovTitle']);
-	$complex = escape($_POST['CplName']);
-	$theatreNum = escape($_POST['ThNum']);
-	$start = escape($_POST['ST']);
-	$date = escape($_POST['date']);
-	$numTickets = escape($_POST['numTickets']);
+	$movie = $_POST['MovTitle'];
+	$complex = $_POST['CplName'];
+	$theatreNum = $_POST['ThNum'];
+	$start = $_POST['ST'];
+	$date = $_POST['dateHidden'];
+	$numTickets = $_POST['numTickets'];
 	$plural = "{$numTickets} tickets";
 	$pluralTwo = "have";
 	
@@ -297,7 +313,42 @@ function confirmBooking() {
 		";
 	} else {
 		echo "Purchase failed. Please try again later.";
+		echo $query;
 	}
+}
+
+function showPurchases() {
+	global $db;
+	$query = "SELECT * FROM reservation WHERE AccNum={$_SESSION['user']['AccNum']}";
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		echo "Something went wrong. Please try again later!";
+		echo $query;
+	} else {
+		echo "
+		<caption>Purchase history by {$_SESSION['user']['Email']}:</caption>
+		<table>
+			<tr>
+			<th>Movie</th>
+			<th>Date</th>
+			<th>Showtime</th>
+			<th>Number of Tickets</th>
+			<th>Theatre Complex</th>
+			<th>Theatre</th>
+			</tr>";
+			while($row = mysqli_fetch_array($result)) {
+				echo "<tr>";
+				echo "<td>" . $row['MovTitle'] . "</td>";
+				echo "<td>" . $row['Date'] . "</td>";
+				echo "<td>" . $row['ST'] . "</td>";
+				echo "<td>" . $row['NumTickets'] . "</td>";
+				echo "<td>" . $row['CplName'] . "</td>";
+				echo "<td>" . $row['ThrNum'] . "</td>";
+				//echo "<td><button type=\"button\" class=\"buyTicket\" onclick=\"buyTicket('" . $showingInfo . "')\"\">Buy Tickets</button></td>";
+				echo "</tr>";
+			}
+		echo "</table>";
+		}
 }
 ?>
 </html>

@@ -32,7 +32,7 @@
 		<?php getComplexes(); ?>
 	</div>
 	<div id="movieDisplay"></div>
+	<div id="chooseDate"></div>
 	<div id="buyTickets"></div>
-	<div id="error"></div>
 </body>
 </html>

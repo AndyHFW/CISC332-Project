@@ -15,6 +15,7 @@
 	<nav>
 		<ul>
 			<li><a href="./booking.php">Bookings</a></li>
+			<li><a href="./showPurchases.php">Purchase History</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>

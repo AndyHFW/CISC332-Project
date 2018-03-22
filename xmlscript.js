@@ -6,6 +6,7 @@ function showMovies(complexName) {
 	}
 	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("chooseDate").innerHTML = "";
 			document.getElementById("buyTickets").innerHTML = "";
 			document.getElementById("movieDisplay").innerHTML = this.responseText;
 		}
@@ -29,10 +30,26 @@ function buyTicket(showingInfo) {
 	}
 	xmlhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			document.getElementById("buyTickets").innerHTML = this.responseText;
+			document.getElementById("chooseDate").innerHTML = this.responseText;
 		}
 	};
 	xmlhttp.open("GET", "ajax.php?q=t~"+showingInfo,true);
 	xmlhttp.send();
-	
+}
+
+function chooseDateFunction() {
+	let selectedDate = document.getElementById("chosenDate").value;
+	let hiddenInfo = document.getElementById("hideShowingInfo").value;
+		if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("buyTickets").innerHTML = this.responseText;
+		}
+	};
+	xmlhttp.open("GET", "ajax.php?q=d~"+hiddenInfo+"~"+selectedDate,true);
+	xmlhttp.send();
 }
