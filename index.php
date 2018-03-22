@@ -11,6 +11,14 @@
 	<title>Home</title>
 	<!--<link rel="stylesheet" type="text/css" href="style.css">-->
 </head>
+<header>
+	<nav>
+		<ul>
+			<li><a href="./booking.php">Bookings</a></li>
+			<!--<li><a href="./instructions.html">Instructions</a></li>-->
+		</ul>
+	</nav>
+</header>
 <body>
 	<div class="header">
 		<h2>Home Page</h2>

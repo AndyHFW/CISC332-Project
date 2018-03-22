@@ -161,4 +161,60 @@ if (isset($_GET['logout'])) {
 	unset($_SESSION['USER']);
 	header("location: login.php");
 }
+
+function getComplexes() {
+	global $db;
+	
+	$query = "SELECT * FROM `theatre complex`";
+	$result = mysqli_query($db, $query);
+	$complexName = "";
+	echo "
+	<div class=\"complexes\">
+	<table>
+		<tr>
+		<th>Complex Name</th>
+		<th>Number of Theatres</th>
+		<th>Address</th>
+		<th>Phone Number</th>
+		</tr>";
+		while($row = mysqli_fetch_array($result)) {
+			$complexName = $row[0];
+			echo "<tr>";
+			echo "<td>" . $row[0] . "</td>";
+			echo "<td>" . $row['NumTheatres'] . "</td>";
+			echo "<td>" . $row['Street'] . "<br/> " . $row['City'] . ", " . $row['Province'] . "<br/> " . $row['Postal'] . "</td>";
+			echo "<td>" . $row['PhoneNum'] . "</td>";
+		echo "<td><button type=\"button\" name=\"complex" . $complexName . " onclick=\"complexSelect(" . $complexName . ")\"\">Select Complex</button></td>";
+			echo "</tr>";
+		}
+	echo "</table>
+	</div>";
+}
+
+function getTheatres($complexName) {
+	global $db;
+	
+	$query = "SELECT MovTitle, ThNum, ST FROM theatre WHERE ComplName = '" . $complexName . "' AND SD<='" . date("Y-m-d") . "' AND ED>='" . date("Y-m-d") . "'";
+	$result = mysqli_query($db, $query);
+	//$complexNum = 0;
+	echo "
+	<div class=\"theatres\">
+	<caption>" . $complexName . "</caption>
+	<table>
+		<tr>
+		<th>Theatre Number</th>
+		<th>Max Seating</th>
+		<th>Screen Size</th>
+		</tr>";
+		while($row = mysqli_fetch_array($result)) {
+			echo "<tr>";
+			echo "<td>" . $row['TheatreNum'] . "</td>";
+			echo "<td>" . $row['MaxSeat'] . "</td>";
+			echo "<td>" . $row['ScreenSize'] . "</td>";
+			echo "<td><button type=\"button\" name=\"complex" . $complexNum . " onclick=\"complexSelect(" . $complexNum . ")\"\">Select Complex</button></td>";
+			echo "</tr>";
+		}
+	echo "</table>
+	</div>";
+}
 ?>
