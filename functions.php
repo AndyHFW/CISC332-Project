@@ -124,6 +124,14 @@ function isLoggedIn() {
 	}
 }
 
+function isAdmin() {
+	if ($_SESSION['user']['UserType'] == 'admin') {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 if (isset($_POST['loginButton'])) {
 	login();
 }
@@ -165,7 +173,7 @@ function login() {
 if (isset($_GET['logout'])) {
 	session_destroy();
 	unset($_SESSION['USER']);
-	header("location: login.php");
+	header("location: {$_SERVER['DOCUMENT_ROOT']}/CISC332-Project/login.php");
 }
 
 function getComplexes() {
@@ -390,13 +398,14 @@ function confirmCancellation() {
 	global $db;
 	$variables = array('movie', 'date', 'complex', 'theatre', 'start', 'tickets', 'userID');
 	$i = 0;
-	foreach($_POST as $values) {
-		${$variables[$i]} = $values[0];
+	$index = 0;
+	while (!isset($_POST["cancelPurchase{$index}"])) $index++;
+	foreach($_POST as $key => $values) {
+		${$variables[$i]} = $values[$index];
 		$i++;
 		if ($i == 7) break;
 	}
-	echo $movie;
-	var_dump($_POST);
+	//var_dump($_POST);
 	$query = "DELETE FROM `reservation` WHERE NumTickets=\"{$tickets}\" 
 		AND MovTitle=\"{$movie}\" AND AccNum=\"{$userID}\" AND ThrNum=\"{$theatre}\"
 		AND CplName=\"{$complex}\" AND ST=\"{$start}\" AND Date=\"{$date}\"";
