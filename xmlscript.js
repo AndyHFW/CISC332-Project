@@ -53,3 +53,19 @@ function chooseDateFunction() {
 	xmlhttp.open("GET", "ajax.php?q=d~"+hiddenInfo+"~"+selectedDate,true);
 	xmlhttp.send();
 }
+
+function cancelPurchase(showingInfo) {
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("chooseDate").innerHTML = this.responseText;
+		}
+	};
+	xmlhttp.open("GET", "ajax.php?q=c~"+showingInfo,true);
+	xmlhttp.send();
+	
+}

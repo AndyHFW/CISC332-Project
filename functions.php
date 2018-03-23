@@ -313,7 +313,6 @@ function confirmBooking() {
 		";
 	} else {
 		echo "Purchase failed. Please try again later.";
-		echo $query;
 	}
 }
 
@@ -321,6 +320,9 @@ function showPurchases() {
 	global $db;
 	$query = "SELECT * FROM reservation WHERE AccNum={$_SESSION['user']['AccNum']}";
 	$result = mysqli_query($db, $query);
+	$today = DateTime::createFromFormat('Y-m-d', date("Y-m-d"));
+	$disabled = "";
+	$buttonNum = 0;
 	if (!$result) {
 		echo "Something went wrong. Please try again later!";
 		echo $query;
@@ -337,18 +339,60 @@ function showPurchases() {
 			<th>Theatre</th>
 			</tr>";
 			while($row = mysqli_fetch_array($result)) {
+				$showingDate = DateTime::createFromFormat('Y-m-d', $row['Date']);
+				$checkDate = $today < $showingDate ? true : false;
+				if ($checkDate == true) {
+					$disabled = "disabled";
+				}
+				$buttonInfo[$buttonNum] = "<form method=\"post\" action=\"cancelPurchase.php\" id=\"cancelPurchase{$buttonNum}\">
+					<input type=\"hidden\" name=\"MovTitle[{$buttonNum}]\" value=\"{$row['MovTitle']}\">
+					<input type=\"hidden\" name=\"date[{$buttonNum}]\" value=\"{$row['Date']}\">
+					<input type=\"hidden\" name=\"CplName[{$buttonNum}]\" value=\"{$row['CplName']}\">
+					<input type=\"hidden\" name=\"ThNum[{$buttonNum}]\" value=\"{$row['ThrNum']}\">
+					<input type=\"hidden\" name=\"ST[{$buttonNum}]\" value=\"{$row['ST']}\">
+					<input type=\"hidden\" name=\"numTickets[{$buttonNum}]\" value=\"{$row['NumTickets']}\">
+					<input type=\"hidden\" name=\"userID[{$buttonNum}]\" value=\"{$_SESSION['user']['AccNum']}\">
+				<button type=\"submit\" class=\"button\" name=\"cancelPurchase{$buttonNum}\" {$disabled}>Cancel Reservation</button></form>";
 				echo "<tr>";
 				echo "<td>" . $row['MovTitle'] . "</td>";
 				echo "<td>" . $row['Date'] . "</td>";
+				echo "<td>" . date("Y-m-d"). "</td>";
 				echo "<td>" . $row['ST'] . "</td>";
 				echo "<td>" . $row['NumTickets'] . "</td>";
 				echo "<td>" . $row['CplName'] . "</td>";
 				echo "<td>" . $row['ThrNum'] . "</td>";
-				//echo "<td><button type=\"button\" class=\"buyTicket\" onclick=\"buyTicket('" . $showingInfo . "')\"\">Buy Tickets</button></td>";
+				echo "<td>" . $buttonInfo[$buttonNum] . "</td>";
 				echo "</tr>";
+				$buttonNum++;
 			}
 		echo "</table>";
 		}
+}
+
+function confirmCancellation() {
+	global $db;
+	$variables = array('movie', 'date', 'complex', 'theatre', 'start', 'tickets', 'userID');
+	$i = 0;
+	foreach($_POST as $values) {
+		${$variables[$i]} = $values[0];
+		$i++;
+		if ($i == 7) break;
+	}
+	echo $movie;
+	var_dump($_POST);
+	$query = "DELETE FROM `reservation` WHERE NumTickets=\"{$tickets}\" 
+		AND MovTitle=\"{$movie}\" AND AccNum=\"{$userID}\" AND ThrNum=\"{$theatre}\"
+		AND CplName=\"{$complex}\" AND ST=\"{$start}\" AND Date=\"{$date}\"";
+	$result = mysqli_query($db, $query);
+	if ($result) {
+		echo "
+		{$complex}: Theatre {$theatre} <br/>
+		Cancelled reservation for {$movie} starting at {$start} on {$date}
+		";
+	} else {
+		echo "Request failed. Please try again later.";
+		echo $query;
+	}
 }
 ?>
 </html>
