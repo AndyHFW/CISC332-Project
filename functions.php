@@ -318,10 +318,11 @@ function confirmBooking() {
 
 function showPurchases() {
 	global $db;
-	$query = "SELECT * FROM reservation WHERE AccNum={$_SESSION['user']['AccNum']}";
+	$query = "SELECT * FROM reservation WHERE AccNum={$_SESSION['user']['AccNum']} ORDER BY Date, ST";
 	$result = mysqli_query($db, $query);
 	$today = DateTime::createFromFormat('Y-m-d', date("Y-m-d"));
 	$disabled = "";
+	$reviewDisabled = "disabled";
 	$buttonNum = 0;
 	if (!$result) {
 		echo "Something went wrong. Please try again later!";
@@ -340,9 +341,14 @@ function showPurchases() {
 			</tr>";
 			while($row = mysqli_fetch_array($result)) {
 				$showingDate = DateTime::createFromFormat('Y-m-d', $row['Date']);
-				$checkDate = $today < $showingDate ? true : false;
-				if ($checkDate == true) {
+				$absDifference = $today->diff($showingDate);
+				$difference = $absDifference->days * ( $absDifference->invert ? -1 : 1);
+				if ($difference  < 0) {
 					$disabled = "disabled";
+					$reviewDisabled = "";
+				} else {
+					$disabled = "";
+					$reviewDisabled = "disabled";
 				}
 				$buttonInfo[$buttonNum] = "<form method=\"post\" action=\"cancelPurchase.php\" id=\"cancelPurchase{$buttonNum}\">
 					<input type=\"hidden\" name=\"MovTitle[{$buttonNum}]\" value=\"{$row['MovTitle']}\">
@@ -353,15 +359,25 @@ function showPurchases() {
 					<input type=\"hidden\" name=\"numTickets[{$buttonNum}]\" value=\"{$row['NumTickets']}\">
 					<input type=\"hidden\" name=\"userID[{$buttonNum}]\" value=\"{$_SESSION['user']['AccNum']}\">
 				<button type=\"submit\" class=\"button\" name=\"cancelPurchase{$buttonNum}\" {$disabled}>Cancel Reservation</button></form>";
+				
+				$reviewInfo[$buttonNum] = "<form method=\"post\" action=\"reviewMovie.php\" id=\"reviewButton{$buttonNum}\">
+					<input type=\"hidden\" name=\"MovTitle[{$buttonNum}]\" value=\"{$row['MovTitle']}\">
+					<input type=\"hidden\" name=\"date[{$buttonNum}]\" value=\"{$row['Date']}\">
+					<input type=\"hidden\" name=\"CplName[{$buttonNum}]\" value=\"{$row['CplName']}\">
+					<input type=\"hidden\" name=\"ThNum[{$buttonNum}]\" value=\"{$row['ThrNum']}\">
+					<input type=\"hidden\" name=\"ST[{$buttonNum}]\" value=\"{$row['ST']}\">
+					<input type=\"hidden\" name=\"numTickets[{$buttonNum}]\" value=\"{$row['NumTickets']}\">
+					<input type=\"hidden\" name=\"userID[{$buttonNum}]\" value=\"{$_SESSION['user']['AccNum']}\">
+				<button type=\"submit\" class=\"button\" name=\"reviewButton{$buttonNum}\" {$reviewDisabled}>Review Movie</button></form>";
 				echo "<tr>";
 				echo "<td>" . $row['MovTitle'] . "</td>";
 				echo "<td>" . $row['Date'] . "</td>";
-				echo "<td>" . date("Y-m-d"). "</td>";
 				echo "<td>" . $row['ST'] . "</td>";
 				echo "<td>" . $row['NumTickets'] . "</td>";
 				echo "<td>" . $row['CplName'] . "</td>";
 				echo "<td>" . $row['ThrNum'] . "</td>";
 				echo "<td>" . $buttonInfo[$buttonNum] . "</td>";
+				echo "<td>" . $reviewInfo[$buttonNum] . "</td>";
 				echo "</tr>";
 				$buttonNum++;
 			}
