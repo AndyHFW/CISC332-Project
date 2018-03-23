@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE html>	
 <html>
 <head>
 </head>
 
 <?php
+//comment test
 session_start();
 
 $db = mysqli_connect('localhost', 'root', '', 'omts56');
