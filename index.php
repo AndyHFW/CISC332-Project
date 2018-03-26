@@ -47,6 +47,24 @@
 					<small>
 						<i  style="color: #888;">(<?php echo ucfirst($_SESSION['user']['UserType']); ?>)</i> 
 						<br>
+							<?php
+							if (isset($_GET['update'])) {
+								if ($_GET['update'] == 'address') {
+									echo "Address successfully updated!<br/>";
+								} else if ($_GET['update'] == 'cc') {
+									echo "Credit card info successfully updated!<br/>";
+								} else if ($_GET['update'] == 'pwd') {
+									echo "Password successfully changed!<br/>";
+								} else if ($_GET['update'] == 'email') {
+									echo "E-mail address successfully updated!<br/>";
+								}
+							}
+							?>
+							<a href="./updateEmail.php">Update e-mail</a><br/>
+							<a href="./updatePWD.php">Change password</a><br/>
+							<a href="./changeAddress.php">Update address</a><br/>
+							<a href="./updateCC.php">Update credit card info</a><br/>
+						<br>
 						<a href="index.php?logout='1'" style="color: red;">logout</a>
 					</small>
 

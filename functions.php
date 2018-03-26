@@ -76,7 +76,6 @@ function register() {
 		} else {
 			$query = "INSERT INTO `user`(`AccNum`, `PWD`, `Street`, `City`, `Province`, `Postal`, `PNum`, `Email`, `CrdCardNum`, `CrdCardExp`, `UserType`) VALUES (DEFAULT, '$password', '$street', '$city', '$province', '$postal', '$phoneNum', '$email', '$creditNum', '$creditExp', 'user')";
 			$result = mysqli_query($db, $query);
-			echo $creditNum;
 			if(!$result){
 				echo mysqli_error($db);
 			}
@@ -150,7 +149,7 @@ function login() {
 	
 	if (count($errors) == 0) {
 		$password = md5($password);
-		$query = "SELECT * FROM user WHERE Email='$email' AND PWD='$password' LIMIT 1";
+		$query = "SELECT * FROM user WHERE Email='{$email}' AND PWD='{$password}' LIMIT 1";
 		$results = mysqli_query($db, $query);
 		if (mysqli_num_rows($results) == 1) {
 			$loggedInUser = mysqli_fetch_assoc($results);
@@ -174,6 +173,113 @@ if (isset($_GET['logout'])) {
 	session_destroy();
 	unset($_SESSION['USER']);
 	header("location: {$_SERVER['DOCUMENT_ROOT']}/CISC332-Project/login.php");
+}
+
+if (isset($_POST['updateAddressButton'])) {
+	updateAddress();
+}
+
+function updateAddress() {
+	global $db, $errors, $email, $street, $city, $postal, $phoneNum;
+	$query = "UPDATE `user` ";
+	$updatedInfo = "SET ";
+	
+	if (isset($_POST['street'])) {
+		$street = escape($_POST['street']);
+		$updatedInfo .= "`Street`='{$street}', ";
+	}
+	if (isset($_POST['city'])) {
+		$city = escape($_POST['city']);
+		$updatedInfo .= "`City`='{$city}', ";
+	}
+	if (isset($_POST['province'])) {
+		$province = escape($_POST['province']);
+		$updatedInfo .= "`Province`='{$province}', ";
+	}
+	if (isset($_POST['postal'])) {
+		$postal = escape($_POST['postal']);
+		$updatedInfo .= "`Postal`='{$postal}', ";
+	}
+	if (isset($_POST['phoneNum'])) {
+		$phoneNum = escape($_POST['phoneNum']);
+		$updatedInfo .= "`PNum`='{$phoneNum}'";
+	}
+	if (substr($query, -2) == ', ') {
+		$query = substr($query, 0, -3);
+	}
+	$query .= $updatedInfo . " WHERE `AccNum`='{$_SESSION['user']['AccNum']}';";
+	$result = mysqli_query($db, $query);
+	if(!$result){
+		echo mysqli_error($db);
+	}
+	header('location: index.php?update=address');
+}
+
+if (isset($_POST['updateCCButton'])) {
+	updateCC();
+}
+
+function updateCC() {
+	global $db;
+	
+	$creditNum = md5(escape($_POST['creditNum']));
+	$creditExpMonth = escape($_POST['creditExpMonth']);
+	$creditExpYear = escape($_POST['creditExpMonth']);
+	$creditExp = md5($creditExpMonth . $creditExpYear);
+	$query = "UPDATE `user` 
+				SET `CrdCardNum`='{$creditNum}', `CrdCardExp`='{$creditExp}' 
+				WHERE `AccNum`='{$_SESSION['user']['AccNum']}';";
+	
+	$result = mysqli_query($db, $query);
+	if(!$result){
+		echo mysqli_error($db);
+	}
+	header('location: index.php?update=cc');
+}
+
+if (isset($_POST['updateEmailButton'])) {
+	updateEmail();
+}
+
+function updateEmail() {
+	global $db, $email;
+	
+	$email = escape($_POST['email']);
+	$query = "UPDATE `user` 
+				SET `Email`='{$email}' 
+				WHERE `AccNum`='{$_SESSION['user']['AccNum']}';";
+	
+	$result = mysqli_query($db, $query);
+	if(!$result){
+		echo mysqli_error($db);
+	}
+	header('location: index.php?update=email');
+}
+
+if (isset($_POST['updatePasswordButton'])) {
+	updatePassword();
+}
+
+function updatePassword() {
+	global $db;
+	$password = md5(escape($_POST['password']));
+	$passwordConfirm = md5(escape($_POST['passwordConfirm']));
+	$newPassword = md5(escape($_POST['newPassword']));
+	if ($password != $passwordConfirm) {
+		echo "Previous passwords must match <br/>";
+	} else {
+		$query = "SELECT * FROM user WHERE AccNum='{$_SESSION['user']['AccNum']}' AND PWD='{$password}' LIMIT 1";
+		$results = mysqli_query($db, $query);
+		if (mysqli_num_rows($results) == 1) {
+			$query = "UPDATE `user` 
+				SET `PWD`='{$newPassword}' 
+				WHERE `AccNum`='{$_SESSION['user']['AccNum']}';";
+			$result = mysqli_query($db, $query);
+			header('location: index.php?update=pwd');
+		} else {
+			echo "Previous password is incorrect<br/>";
+		}
+	}
 }
 
 function getComplexes() {
@@ -371,11 +477,6 @@ function showPurchases() {
 				
 				$reviewInfo[$buttonNum] = "<form method=\"post\" action=\"reviewMovie.php\" id=\"reviewButton{$buttonNum}\">
 					<input type=\"hidden\" name=\"MovTitle[{$buttonNum}]\" value=\"{$row['MovTitle']}\">
-					<input type=\"hidden\" name=\"date[{$buttonNum}]\" value=\"{$row['Date']}\">
-					<input type=\"hidden\" name=\"CplName[{$buttonNum}]\" value=\"{$row['CplName']}\">
-					<input type=\"hidden\" name=\"ThNum[{$buttonNum}]\" value=\"{$row['ThrNum']}\">
-					<input type=\"hidden\" name=\"ST[{$buttonNum}]\" value=\"{$row['ST']}\">
-					<input type=\"hidden\" name=\"numTickets[{$buttonNum}]\" value=\"{$row['NumTickets']}\">
 					<input type=\"hidden\" name=\"userID[{$buttonNum}]\" value=\"{$_SESSION['user']['AccNum']}\">
 				<button type=\"submit\" class=\"button\" name=\"reviewButton{$buttonNum}\" {$reviewDisabled}>Review Movie</button></form>";
 				echo "<tr>";
@@ -392,6 +493,29 @@ function showPurchases() {
 			}
 		echo "</table>";
 		}
+}
+
+if (isset($_POST['updateEmailButton'])) {
+	updateEmail();
+}
+
+function updateEmail() {
+	global $db, $email;
+	
+	$email = escape($_POST['email']);
+	$query = "UPDATE `user` 
+				SET `Email`='{$email}' 
+				WHERE `AccNum`='{$_SESSION['user']['AccNum']}';";
+	
+	$result = mysqli_query($db, $query);
+	if(!$result){
+		echo mysqli_error($db);
+	}
+	header('location: index.php?update=email');
+}
+
+if (isset($_POST['updatePasswordButton'])) {
+	updatePassword();
 }
 
 function confirmCancellation() {
