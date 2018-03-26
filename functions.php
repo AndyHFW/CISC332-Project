@@ -659,5 +659,40 @@ function deleteUser(){
 	if (!$result) echo "broken";
 	//header("Location: /userView.php");
 }
+
+// May or may not break if more than one movie/complex has the same number of tickets
+function popularMovie() {
+	global $db;
+	$query = "SELECT MovTitle, SUM(NumTickets) AS totalTickets
+				FROM `reservation`
+				GROUP BY MovTitle
+				ORDER BY totalTickets DESC 
+				LIMIT 1;";
+	$result = mysqli_query($db, $query);
+	echo "Most popular movie: ";
+	if (!$result) {
+		echo "Could not find the most popular movie, please try again later.";
+	} else {
+		$row = mysqli_fetch_assoc($result);
+		echo "{$row['MovTitle']} ({$row['totalTickets']}) <br/>";
+	}
+}
+
+function popularComplex() {
+	global $db;
+	$query = "SELECT CplName, SUM(NumTickets) AS totalTickets
+				FROM `reservation`
+				GROUP BY CplName
+				ORDER BY totalTickets DESC 
+				LIMIT 1;";
+	$result = mysqli_query($db, $query);
+	echo "Most popular theatre complex: ";
+	if (!$result) {
+		echo "Could not find the most popular theatre complex, please try again later.";
+	} else {
+		$row = mysqli_fetch_assoc($result);
+		echo "{$row['CplName']} ({$row['totalTickets']}) <br/>";
+	}
+}
 ?>
 </html>

@@ -7,18 +7,19 @@ if (!isLoggedIn()) {
 	$_SESSION['msg'] = "Insufficient permissions to access this page";
 	header('location: ../index.php');
 }
-echo $_SERVER['DOCUMENT_ROOT']."/CISC332-Project/login.php";
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>User View</title>
-	<!--<link rel="stylesheet" type="text/css" href="style.css">-->
+	<link rel="stylesheet" type="text/css" href="../OMTS.css">
 </head>
 <header>
 	<nav>
 		<ul>
-			
+			<li><a href="home.php">Admin homepage</a></li>
+			<li><a href="userView.php">User view</a></li>
+			<li><a href="popular.php">Most popular</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>
