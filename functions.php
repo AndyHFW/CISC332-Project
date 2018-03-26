@@ -613,5 +613,51 @@ function movieInfo($movie) {
 		";
 	}
 }
+
+function getUsers() {
+	global $db;
+	$selectedNum = 0;
+	$query = "SELECT AccNum,Street,City,Province,Postal,Email,PNum FROM `user` WHERE UserType = 'user'";
+	$result = mysqli_query($db, $query);
+	echo "
+	<table>
+		<tr>
+		<th>Account Number</th>
+		<th>Address</th>
+		<th>Email</th>
+		<th>Phone Number</th>
+		</tr>";
+		while($row = mysqli_fetch_array($result)) {
+			$selectedUser = $row['AccNum'];
+			echo "<tr>";
+			echo "<td>" . $row['AccNum'] . "</td>";
+			echo "<td>" . $row['Street'] . "<br/> " . $row['City'] . ", " . $row['Province'] . "<br/> " . $row['Postal'] . "</td>";
+			echo "<td>" . $row['Email'] . "</td>";
+			echo "<td>" . $row['PNum'] . "</td>";
+			echo "<td><form method=\"post\" action=\"userView.php?action=delete\"><input type=\"hidden\" name=\"userID{$selectedNum}\" value=\"{$selectedUser}\">
+					<button type=\"submit\" class=\"button\" name=\"deleteUser{$selectedNum}\">Delete User</button>
+					</form>";
+					//<button type=\"button\" name=\"delete_User" . $selectedNum . "\" onclick=\"deleteUser('" . $selectedUser . "')\">Delete User</button></td>";
+			echo "</tr>";
+			$selectedNum++;
+		}
+	echo "</table>";
+}
+
+function deleteUser(){
+	global $db;
+	$index = 0;
+	while (!isset($_POST["deleteUser{$index}"])) $index++;
+	foreach($_POST as $key => $values) {
+		$selectUser = $values;
+		break;
+	}
+	//var_dump($_POST);
+	$query = "DELETE FROM user WHERE AccNum = '$selectUser';";
+	$result = mysqli_query($db, $query);
+	echo $query;
+	if (!$result) echo "broken";
+	//header("Location: /userView.php");
+}
 ?>
 </html>

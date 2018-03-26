@@ -12,21 +12,34 @@ echo $_SERVER['DOCUMENT_ROOT']."/CISC332-Project/login.php";
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Home</title>
-	<link rel="stylesheet" type="text/css" href="OMTS.css">
+	<title>User View</title>
+	<!--<link rel="stylesheet" type="text/css" href="style.css">-->
 </head>
 <header>
 	<nav>
 		<ul>
-			<li><a href="userView.php">User View</a></li>
+			
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>
 </header>
 <body>
 	<div class="header">
-		<h2>Home Page</h2>
+		<h2>User View</h2>
 	</div>
+	<div id="userDisplay">
+		<?php
+			if (isset($_GET['action'])) {
+					if ($_GET['action'] == 'delete') {
+						deleteUser();
+						echo "User successfully deleted.<br/>";
+					}
+			}
+		?>
+		<?php getUsers(); ?>
+	</div>
+	
+	
 	<div class="content">
 		<!-- notification message -->
 		<?php if (isset($_SESSION['success'])) : ?>
@@ -39,6 +52,8 @@ echo $_SERVER['DOCUMENT_ROOT']."/CISC332-Project/login.php";
 				</h3>
 			</div>
 		<?php endif ?>
+		
+	
 		<!-- logged in user information -->
 		<div class="profile_info">
 			<!--<img src="images/user_profile.png"  >-->
