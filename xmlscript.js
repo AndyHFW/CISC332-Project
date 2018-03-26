@@ -67,5 +67,4 @@ function cancelPurchase(showingInfo) {
 	};
 	xmlhttp.open("GET", "ajax.php?q=c~"+showingInfo,true);
 	xmlhttp.send();
-	
 }

@@ -57,6 +57,12 @@
 									echo "Password successfully changed!<br/>";
 								} else if ($_GET['update'] == 'email') {
 									echo "E-mail address successfully updated!<br/>";
+								} else if ($_GET['update'] == 'review') {
+									echo "New review added!<br/>";
+								}
+							} else if (isset($_GET['action'])) {
+								if ($_GET['action'] == 'finReview') {
+									finishReview();
 								}
 							}
 							?>

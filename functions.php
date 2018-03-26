@@ -477,7 +477,6 @@ function showPurchases() {
 				
 				$reviewInfo[$buttonNum] = "<form method=\"post\" action=\"reviewMovie.php\" id=\"reviewButton{$buttonNum}\">
 					<input type=\"hidden\" name=\"MovTitle[{$buttonNum}]\" value=\"{$row['MovTitle']}\">
-					<input type=\"hidden\" name=\"userID[{$buttonNum}]\" value=\"{$_SESSION['user']['AccNum']}\">
 				<button type=\"submit\" class=\"button\" name=\"reviewButton{$buttonNum}\" {$reviewDisabled}>Review Movie</button></form>";
 				echo "<tr>";
 				echo "<td>" . $row['MovTitle'] . "</td>";
@@ -495,27 +494,63 @@ function showPurchases() {
 		}
 }
 
-if (isset($_POST['updateEmailButton'])) {
-	updateEmail();
-}
-
-function updateEmail() {
-	global $db, $email;
-	
-	$email = escape($_POST['email']);
-	$query = "UPDATE `user` 
-				SET `Email`='{$email}' 
-				WHERE `AccNum`='{$_SESSION['user']['AccNum']}';";
-	
-	$result = mysqli_query($db, $query);
-	if(!$result){
-		echo mysqli_error($db);
+function reviewMovie() {
+	global $db;
+	$index = 0;
+	while (!isset($_POST["reviewButton{$index}"])) $index++;
+	foreach($_POST as $key => $values) {
+		$movie = $values[$index];
+		break;
 	}
-	header('location: index.php?update=email');
+	$query = "SELECT `Rating`, `Text` FROM `review` WHERE `MovTitle`='{$movie}' AND `AccountNum`='{$_SESSION['user']['AccNum']}' LIMIT 1";
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		echo "Review for {$movie}: <br/>
+		<form method=\"post\" action=\"index.php?action=finReview\">
+			<input type=\"hidden\" name=\"movieForReview\" value=\"{$movie}\">
+			<label>Rating: </label>
+			<input type=\"number\" name=\"rating\" min=\"1\" max=\"10\" value=\"1\"><br/><br/>
+			<textarea name=\"reviewInput\" cols=\"40\" rows=\"5\"></textarea><br/>
+		<input type=\"submit\"/>
+		</form>
+		";
+	} else {
+		$reviewInfo = mysqli_fetch_assoc($result);
+		echo "Review for {$movie}: <br/>
+		<form method=\"post\" action=\"index.php?action=finReview\">
+			<input type=\"hidden\" name=\"movieForReview\" value=\"{$movie}\">
+			<label>Rating: </label>
+			<input type=\"number\" name=\"rating\" min=\"1\" max=\"10\" value=\"{$reviewInfo['Rating']}\"><br/><br/>
+			<textarea name=\"reviewInput\" cols=\"40\" rows=\"5\">{$reviewInfo['Text']}</textarea><br/>
+		<input type=\"submit\"/>
+		</form>
+		";
+	}
 }
 
-if (isset($_POST['updatePasswordButton'])) {
-	updatePassword();
+function finishReview() {
+	global $db, $review;
+	$rating = $_POST['rating'];
+	$review = $_POST['reviewInput'];
+	$movie = $_POST['movieForReview'];
+	//var_dump($_POST);
+	$query = "SELECT `Rating`, `Text` FROM `review` WHERE `MovTitle`='{$movie}' AND `AccountNum`='{$_SESSION['user']['AccNum']}' LIMIT 1";
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		$query = "INSERT INTO `review` (`Rating`, `Text`, `MovTitle`, `AccountNum`) VALUES
+				('{$rating}', '{$review}', '{$movie}', {$_SESSION['user']['AccNum']})";
+	} else {
+		$query = "UPDATE `review` SET `Rating`='{$rating}', `Text`='{$review}' 
+					WHERE `AccountNum`='{$_SESSION['user']['AccNum']}' AND `MovTitle`='{$movie}'";
+	}
+	echo $query;
+	$result = mysqli_query($db, $query);
+	if ($result) {
+		header('location: index.php?update=review');
+	} else {
+		echo "Request failed. Please try again later.";
+		echo $query;
+	}
 }
 
 function confirmCancellation() {
