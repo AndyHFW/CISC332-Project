@@ -536,17 +536,16 @@ function finishReview() {
 	//var_dump($_POST);
 	$query = "SELECT `Rating`, `Text` FROM `review` WHERE `MovTitle`='{$movie}' AND `AccountNum`='{$_SESSION['user']['AccNum']}' LIMIT 1";
 	$result = mysqli_query($db, $query);
-	if (!$result) {
+	if (!$result || mysqli_num_rows($result) != 1) {
 		$query = "INSERT INTO `review` (`Rating`, `Text`, `MovTitle`, `AccountNum`) VALUES
-				('{$rating}', '{$review}', '{$movie}', {$_SESSION['user']['AccNum']})";
+				('{$rating}', '{$review}', '{$movie}', {$_SESSION['user']['AccNum']});";
 	} else {
 		$query = "UPDATE `review` SET `Rating`='{$rating}', `Text`='{$review}' 
-					WHERE `AccountNum`='{$_SESSION['user']['AccNum']}' AND `MovTitle`='{$movie}'";
+					WHERE `AccountNum`='{$_SESSION['user']['AccNum']}' AND `MovTitle`='{$movie}';";
 	}
-	echo $query;
 	$result = mysqli_query($db, $query);
 	if ($result) {
-		header('location: index.php?update=review');
+		//header('location: index.php?update=review');
 	} else {
 		echo "Request failed. Please try again later.";
 		echo $query;
