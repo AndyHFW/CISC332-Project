@@ -365,7 +365,7 @@ function showTickets($showingInfo, $infoString) {
 	global $db;
 	echo "
 	<div id=\"buyTicketInfo\">
-		<a href='./movieInfo.php?title={$showingInfo[0]}' target='_blank'>{$showingInfo[0]}: </a>" . $showingInfo[0] . "<br/>
+		Movie: <a href='./movieInfo.php?title={$showingInfo[0]}' target='_blank'>{$showingInfo[0]}</a><br/>
 		Complex: " . $showingInfo[1] . "<br/>
 		Theatre Number: " . $showingInfo[2] . "<br/>
 		Start Time: " . $showingInfo[3] . "<br/>

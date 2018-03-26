@@ -1,5 +1,6 @@
 <?php
 	include('functions.php');
+	// technically super inefficient and poorly coded but it works
 	$q = $_GET['q'];
 	if ($q[0] == "c") {
 		showMovies(substr($q, 1));
