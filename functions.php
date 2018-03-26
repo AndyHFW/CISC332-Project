@@ -342,7 +342,7 @@ function showMovies($complexName) {
 				$showingInfo = $row['MovTitle'] . '~' . $complexName . '~' . $row['ThNum'] . '~' . $row['ST'] . '~' . $row['ED'] . '~' . $row['MaxSeat'];
 				echo "<tr>";
 				echo "<td>" . $row['ThNum'] . "</td>";
-				echo "<td>" . $row['MovTitle'] . "</td>";
+				echo "<td><a href='./movieInfo.php?title={$row['MovTitle']}' target='_blank'>{$row['MovTitle']}</a></td>";
 				echo "<td>" . $row['ST'] . "</td>";
 				echo "<td>" . $row['MaxSeat'] . "</td>";
 				echo "<td>" . $row['ScreenSize'] . "</td>";
@@ -365,7 +365,7 @@ function showTickets($showingInfo, $infoString) {
 	global $db;
 	echo "
 	<div id=\"buyTicketInfo\">
-		Movie: " . $showingInfo[0] . "<br/>
+		<a href='./movieInfo.php?title={$showingInfo[0]}' target='_blank'>{$showingInfo[0]}: </a>" . $showingInfo[0] . "<br/>
 		Complex: " . $showingInfo[1] . "<br/>
 		Theatre Number: " . $showingInfo[2] . "<br/>
 		Start Time: " . $showingInfo[3] . "<br/>
@@ -424,7 +424,7 @@ function confirmBooking() {
 		}
 		echo "
 		{$complex}: Theatre {$theatreNum} <br/>
-		{$plural} for {$movie} starting at {$start} on {$date} {$pluralTwo} been purchased.
+		{$plural} for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a> starting at {$start} on {$date} {$pluralTwo} been purchased.
 		";
 	} else {
 		echo "Purchase failed. Please try again later.";
@@ -479,7 +479,7 @@ function showPurchases() {
 					<input type=\"hidden\" name=\"MovTitle[{$buttonNum}]\" value=\"{$row['MovTitle']}\">
 				<button type=\"submit\" class=\"button\" name=\"reviewButton{$buttonNum}\" {$reviewDisabled}>Review Movie</button></form>";
 				echo "<tr>";
-				echo "<td>" . $row['MovTitle'] . "</td>";
+				echo "<td><a href='./movieInfo.php?title={$row['MovTitle']}' target='_blank'>{$row['MovTitle']}</a></td>";
 				echo "<td>" . $row['Date'] . "</td>";
 				echo "<td>" . $row['ST'] . "</td>";
 				echo "<td>" . $row['NumTickets'] . "</td>";
@@ -505,7 +505,7 @@ function reviewMovie() {
 	$query = "SELECT `Rating`, `Text` FROM `review` WHERE `MovTitle`='{$movie}' AND `AccountNum`='{$_SESSION['user']['AccNum']}' LIMIT 1";
 	$result = mysqli_query($db, $query);
 	if (!$result) {
-		echo "Review for {$movie}: <br/>
+		echo "Review for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a>: <br/>
 		<form method=\"post\" action=\"index.php?action=finReview\">
 			<input type=\"hidden\" name=\"movieForReview\" value=\"{$movie}\">
 			<label>Rating: </label>
@@ -516,7 +516,7 @@ function reviewMovie() {
 		";
 	} else {
 		$reviewInfo = mysqli_fetch_assoc($result);
-		echo "Review for {$movie}: <br/>
+		echo "Review for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a>: <br/>
 		<form method=\"post\" action=\"index.php?action=finReview\">
 			<input type=\"hidden\" name=\"movieForReview\" value=\"{$movie}\">
 			<label>Rating: </label>
@@ -577,6 +577,40 @@ function confirmCancellation() {
 	} else {
 		echo "Request failed. Please try again later.";
 		echo $query;
+	}
+}
+
+function movieInfo($movie) {
+	global $db;
+	$synopsis = "";
+	
+	$query = "SELECT `Title`, `RunTime`, `Rating`, `Synopsis`, concat(`DirFName`, ' ', `DirLName`) AS `DirName`, `ProdCompName`, `SuplName`
+				FROM `movie`
+				WHERE `Title`='{$movie}';";
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		echo "Movie not found.";
+		echo $query;
+	} else {
+		echo "
+		<div class=\"columnOne\">
+		<table>";
+			while($row = mysqli_fetch_array($result)) {
+				echo "<tr><td>Title</td><td>{$row['Title']}</td></tr>";
+				echo "<tr><td>Runtime</td><td>{$row['RunTime']}</td></tr>";
+				echo "<tr><td>Rating</td><td>{$row['Rating']}</td></tr>";
+				echo "<tr><td>Director</td><td>{$row['DirName']}</td></tr>";
+				echo "<tr><td>Production Company</td><td>{$row['ProdCompName']}</td></tr>";
+				echo "<tr><td>Supplier</td><td>{$row['SuplName']}</td></tr>";
+				$synopsis = $row['Synopsis'];
+			}
+		echo "</table>
+		</div>
+		<div class=\"columnTwo\">
+			Synopsis:<br/>
+			<p>{$synopsis}</p>
+		</div>
+		";
 	}
 }
 ?>

@@ -14,8 +14,8 @@ if (!isLoggedIn()) {
 	<meta name="author" content="Andy Wang"/>
 	<meta name="description" content="Updating user address for the OMTS system."/>
 	<meta name="viewport" content="width=device-width" />
+	<link rel="stylesheet" href="OMTS.css">
 	<!--<link rel="stylesheet" href="reset.css">
-	<link rel="stylesheet" href="flashcard.css">
 	<script src="flashcardJS.js"></script>
 	<script src="jquery-3.2.1.min.js"></script>-->
 </head>

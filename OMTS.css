@@ -1,0 +1,42 @@
+/**************/
+/* Navigation */
+/**************/
+
+nav ul{
+	overflow: hidden;
+	list-style-type: none;
+	margin-left: 0;
+	padding-left: 0;
+}
+
+nav ul li {
+	float: left;
+	margin-right: 10px;
+}
+
+nav ul li a {
+	display: inline-block;
+	color: #fff;
+	background-color: #000;
+	font-weight: bold;
+	text-decoration: none;
+	padding: 5px 20px;
+}
+
+nav ul li a:hover {
+	color: #000;
+	background-color: #ddd;
+}
+
+.columnOne, .columnTwo {
+	float: left;
+}
+
+.columnOne {
+}
+
+.columnTwo {
+	padding-top: 0px;
+	margin-top: 0px;
+	width: 70%;
+}

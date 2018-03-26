@@ -12,7 +12,7 @@
 <head>
 	<title>Home</title>
 	<script src="xmlscript.js"></script>
-	<!--<link rel="stylesheet" type="text/css" href="style.css">-->
+	<<link rel="stylesheet" type="text/css" href="OMTS.css">
 </head>
 <header>
 	<nav>

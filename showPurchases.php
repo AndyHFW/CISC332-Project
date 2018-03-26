@@ -9,7 +9,7 @@ if (!isLoggedIn()) {
 <html>
 <head>
 	<title>Home</title>
-	<!--<link rel="stylesheet" type="text/css" href="style.css">-->
+	<link rel="stylesheet" type="text/css" href="OMTS.css">
 </head>
 <header>
 	<nav>
