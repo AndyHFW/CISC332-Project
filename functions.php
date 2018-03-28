@@ -1,9 +1,3 @@
-<!DOCTYPE html>	
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="./OMTS.css">
-</head>
-
 <?php
 //comment test
 session_start();
@@ -283,7 +277,7 @@ function updatePassword() {
 	}
 }
 
-function getComplexes() {
+function getComplexes($buttonType="movie") {
 	global $db;
 	
 	$query = "SELECT * FROM `theatre complex`";
@@ -305,7 +299,12 @@ function getComplexes() {
 			echo "<td>" . $row['NumTheatres'] . "</td>";
 			echo "<td>" . $row['Street'] . "<br/> " . $row['City'] . ", " . $row['Province'] . "<br/> " . $row['Postal'] . "</td>";
 			echo "<td>" . $row['PhoneNum'] . "</td>";
-			echo "<td class=\"tableLink\"><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showMovies('" . $complexName . "')\">Select Complex</button></td>";
+			if ($buttonType=="movie"){
+				echo "<td class=\"tableLink\"><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showMovies('" . $complexName . "')\">Select Complex</button></td>";	
+			} else {
+				echo "<td class=\"tableLink\"><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showTheatres('" . $complexName . "')\">Select Complex</button></td>";	
+			}
+			
 			echo "</tr>";
 			$complexNum++;
 		}
@@ -353,6 +352,61 @@ function showMovies($complexName) {
 			}
 		echo "</table>";
 		}
+}
+
+function showTheatres($complexName) {
+	global $db;
+	$query = "SELECT `TheatreNum`, `MaxSeat`, `ScreenSize` FROM `theatre` WHERE `CplName`='{$complexName}';";
+	$result = mysqli_query($db, $query);
+	if (!$result) {
+		echo "There are no theatres associated with this complex. Please select another complex.<br/>";
+		echo $query;
+	} else {
+		echo "
+		<caption>" . $complexName . "</caption>
+		<table>
+			<tr>
+			<th>Theatre Number</th>
+			<th>Max Seating</th>
+			<th>Screen Size</th>
+			</tr>";
+			while($row = mysqli_fetch_array($result)) {
+				$showingInfo = $complexName . '~' . $row['TheatreNum'];
+				echo "<tr>";
+				echo "<td>" . $row['TheatreNum'] . "</td>";
+				echo "<td>" . $row['MaxSeat'] . "</td>";
+				echo "<td>" . $row['ScreenSize'] . "</td>";
+				echo "<td class=\"tableLink\"><button type=\"button\" class=\"addShowing\" onclick=\"addShowing('" . $showingInfo . "')\"\">Choose Theatre</button></td>";
+				echo "</tr>";
+			}
+		echo "</table>";
+	}
+}
+
+function addShowing($showingInfo) {
+	global $db;
+	$movies = array();
+	$query = "SELECT `Title` FROM `movie`;";
+	$result = mysqli_query($db, $query);
+	while($row = mysqli_fetch_array($result)) {
+		array_push($movies, "<option value=\"{$row['Title']}\">{$row['Title']}</option>");
+	}
+	echo "
+		<h2>{$showingInfo[0]} (Theatre {$showingInfo[1]})</h2>
+		<form method=\"post\", action=\"addShowingInt.php\" name=\"addShowingForm\">
+			<select name=\"movieShowing\">";
+				foreach ($movies as $options) {
+					echo $options;
+				}
+			echo "</select><br/>
+			<input type=\"date\" name=\"startDateShowing\" value=\"" . date("Y-m-d") . "\" min=\"" . date("Y-m-d") . "\"><br/>
+			<input type=\"date\" name=\"endDateShowing\" value=\"" . date("Y-m-d") . "\" min=\"" . date("Y-m-d") . "\"><br/>
+			<input type=\"time\" name=\"showingTime\"><br/>
+			<input type=\"hidden\" name=\"complexNameShowing\" value=\"{$showingInfo[0]}\">
+			<input type=\"hidden\" name=\"theatreNumShowing\" value=\"{$showingInfo[1]}\">
+			<button type=\"submit\" name=\"submitShowing\">Add Showing</button>			
+		</form>
+		";
 }
 
 function showTickets($showingInfo, $infoString) {
@@ -553,7 +607,7 @@ function finishReview() {
 	}
 	$result = mysqli_query($db, $query);
 	if ($result) {
-		//header('location: index.php?update=review');
+		header('location: index.php?update=review');
 	} else {
 		echo "Request failed. Please try again later.";
 		echo $query;
@@ -702,4 +756,3 @@ function popularComplex() {
 	}
 }
 ?>
-</html>

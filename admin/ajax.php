@@ -1,5 +1,5 @@
 <?php
-	include('functions.php');
+	include('../functions.php');
 	// technically super inefficient and poorly coded but it works
 	if (isset($_GET['q'])){
 		$q = $_GET['q'];
@@ -17,8 +17,8 @@
 			addShowing(array_slice($q, 1));
 		}
 	} else if (isset($_GET['t'])) {
-		$t = $_GET['q'];
-		
+		$t = $_GET['t'];
+		showTheatres($t);
 	}
 	
 ?>
