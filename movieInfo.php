@@ -19,13 +19,6 @@ if (isset($_GET['title'])) {
 	<script src="jquery-3.2.1.min.js"></script>-->
 </head>
 <header>
-	<nav>
-		<ul>
-			<li><a href="./index.php">Profile</a></li>
-			<li><a href="./booking.php">Bookings</a></li>
-			<li><a href="./showPurchases.php">Purchase History</a></li>
-		</ul>
-	</nav>
 </header>
 <body>
 	<div id="columnContainer">

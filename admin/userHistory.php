@@ -7,11 +7,16 @@ if (!isLoggedIn()) {
 	$_SESSION['msg'] = "Insufficient permissions to access this page";
 	header('location: ../index.php');
 }
+$userNum = "";
+if (isset($_GET['user'])) {
+	$userNum = $_GET['user'];
+}
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-	<title>User View</title>
+	<title>Purchase history for user <?php echo $userNum; ?></title>
 	<link rel="stylesheet" type="text/css" href="../OMTS.css">
 </head>
 <header>
@@ -27,19 +32,6 @@ if (!isLoggedIn()) {
 	</nav>
 </header>
 <body>
-	<div class="header">
-		<h2>User View</h2>
-	</div>
-	<div id="userDisplay">
-		<?php
-			if (isset($_GET['action'])) {
-					if ($_GET['action'] == 'delete') {
-						deleteUser();
-						echo "User successfully deleted.<br/>";
-					}
-			}
-		?>
-		<?php getUsers(); ?>
-	</div>
+	<div class="purchaseDiv"><?php showPurchases($userNum) ?></div>
 </body>
 </html>

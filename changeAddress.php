@@ -22,7 +22,10 @@ if (!isLoggedIn()) {
 <header>
 	<nav>
 		<ul>
-			<li><a href="./index.php">Back to profile</a></li>
+			<li><a href="./index.php">Home</a></li>
+			<li><a href="./booking.php">Bookings</a></li>
+			<li><a href="./showPurchases.php">Purchase history</a></li>
+			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">Logout</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>

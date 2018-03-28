@@ -12,7 +12,7 @@ if (!isLoggedIn()) {
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Home</title>
+	<title>Edit movie</title>
 	<link rel="stylesheet" type="text/css" href="../OMTS.css">
 </head>
 <header>
@@ -22,6 +22,7 @@ if (!isLoggedIn()) {
 			<li><a href="userView.php">User view</a></li>
 			<li><a href="popular.php">Most popular</a></li>
 			<li><a href="movieUpdate.php">Update or delete movies</a></li>
+			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">Logout</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>

@@ -1,9 +1,8 @@
 <?php 
 	include('functions.php');
 	if (!isLoggedIn()) {
-		$loggedIn = false;
-	} else {
-		$loggedIn = true;
+	$_SESSION['msg'] = "You must log in first";
+	header('location: login.php');
 	}
 ?>
 
@@ -12,21 +11,21 @@
 <head>
 	<title>Home</title>
 	<script src="xmlscript.js"></script>
-	<<link rel="stylesheet" type="text/css" href="OMTS.css">
+	<link rel="stylesheet" type="text/css" href="OMTS.css">
 </head>
 <header>
 	<nav>
 		<ul>
 			<li><a href="./index.php">Home</a></li>
+			<li><a href="./booking.php">Bookings</a></li>
+			<li><a href="./showPurchases.php">Purchase history</a></li>
+			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">Logout</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>
 </header>
 <body>
 	<div id="bookingInfo">
-		<?php
-			
-		?>
 	</div>
 	<div id="complexDisplay">
 		<?php getComplexes(); ?>

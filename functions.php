@@ -1,6 +1,7 @@
 <!DOCTYPE html>	
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="./OMTS.css">
 </head>
 
 <?php
@@ -431,9 +432,14 @@ function confirmBooking() {
 	}
 }
 
-function showPurchases() {
+function showPurchases($userNum='-1') {
 	global $db;
-	$query = "SELECT * FROM reservation WHERE AccNum={$_SESSION['user']['AccNum']} ORDER BY Date, ST";
+	$set = true;
+	if ($userNum == '-1') {
+		$userNum = $_SESSION['user']['AccNum'];
+		$set=false;
+	}
+	$query = "SELECT * FROM reservation WHERE AccNum={$userNum} ORDER BY Date, ST";
 	$result = mysqli_query($db, $query);
 	$today = DateTime::createFromFormat('Y-m-d', date("Y-m-d"));
 	$disabled = "";
@@ -444,7 +450,7 @@ function showPurchases() {
 		echo $query;
 	} else {
 		echo "
-		<caption>Purchase history by {$_SESSION['user']['Email']}:</caption>
+		<caption>Purchase history of user {$userNum}:</br></caption>
 		<table>
 			<tr>
 			<th>Movie</th>
@@ -485,8 +491,10 @@ function showPurchases() {
 				echo "<td>" . $row['NumTickets'] . "</td>";
 				echo "<td>" . $row['CplName'] . "</td>";
 				echo "<td>" . $row['ThrNum'] . "</td>";
-				echo "<td>" . $buttonInfo[$buttonNum] . "</td>";
-				echo "<td>" . $reviewInfo[$buttonNum] . "</td>";
+				if ($set==false) {
+					echo "<td>" . $buttonInfo[$buttonNum] . "</td>";
+					echo "<td>" . $reviewInfo[$buttonNum] . "</td>";
+				}
 				echo "</tr>";
 				$buttonNum++;
 			}
@@ -633,10 +641,10 @@ function getUsers() {
 			echo "<td>" . $row['Street'] . "<br/> " . $row['City'] . ", " . $row['Province'] . "<br/> " . $row['Postal'] . "</td>";
 			echo "<td>" . $row['Email'] . "</td>";
 			echo "<td>" . $row['PNum'] . "</td>";
+			echo "<td><a href=\"userHistory.php?user={$selectedUser}\">Purchase History</a></td>";
 			echo "<td><form method=\"post\" action=\"userView.php?action=delete\"><input type=\"hidden\" name=\"userID{$selectedNum}\" value=\"{$selectedUser}\">
 					<button type=\"submit\" class=\"button\" name=\"deleteUser{$selectedNum}\">Delete User</button>
 					</form>";
-					//<button type=\"button\" name=\"delete_User" . $selectedNum . "\" onclick=\"deleteUser('" . $selectedUser . "')\">Delete User</button></td>";
 			echo "</tr>";
 			$selectedNum++;
 		}

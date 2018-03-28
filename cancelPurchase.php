@@ -6,6 +6,7 @@ if (!isLoggedIn()) {
 }
 
 confirmCancellation();
+header('location: ./showPurchases.php');
 echo "
 <p>
 	<a href=\"./showPurchases.php\">Back to purchase history</a> <br/>
