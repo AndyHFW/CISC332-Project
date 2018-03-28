@@ -66,7 +66,8 @@ if (!isLoggedIn()) {
 						'{$_POST['addSupl']}');";
 				$result = mysqli_query($db, $query);
 				if (!$result) {
-					//echo "broken";
+					echo "Movie could not be added<br/>";
+					echo $query;
 				} else {
 					echo "Movie added successfully!<br/>";
 				}

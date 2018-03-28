@@ -17,7 +17,8 @@
 		$result = mysqli_query($db, $query);
 		if (!$result) {
 			echo "Insert failed<br/>";
-			echo $query;
+			echo $query."<br/>";
+			echo "<a href=\"movieUpdate.php\">Go back</a>";
 		} else {
 			header('location: movieUpdate.php?action=finAddShowing');
 		}

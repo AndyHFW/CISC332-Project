@@ -247,8 +247,10 @@ function updateEmail() {
 	$result = mysqli_query($db, $query);
 	if(!$result){
 		echo mysqli_error($db);
+	} else {
+		$_SESSION['user']['Email'] = escape($_POST['email']);
+		header('location: index.php?update=email');
 	}
-	header('location: index.php?update=email');
 }
 
 if (isset($_POST['updatePasswordButton'])) {
@@ -498,9 +500,10 @@ function confirmBooking() {
 			$pluralTwo = "has";
 		}
 		echo "
-		{$complex}: Theatre {$theatreNum} <br/>
+		<div class=\"header\"><h2>{$complex}: Theatre {$theatreNum}</h2></div>
+		<div class=\"content\">
 		{$plural} for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a> starting at {$start} on {$date} {$pluralTwo} been purchased.
-		";
+		</div>";
 	} else {
 		echo "Purchase failed. Please try again later.";
 	}
@@ -737,7 +740,7 @@ function deleteUser(){
 	$result = mysqli_query($db, $query);
 	echo $query;
 	if (!$result) echo "broken";
-	header("Location: /userView.php");
+	header("Location: ./userView.php");
 }
 
 // May or may not break if more than one movie/complex has the same number of tickets
