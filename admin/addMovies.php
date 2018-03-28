@@ -21,8 +21,9 @@ if (!isLoggedIn()) {
 		<ul>
 			<li><a href="home.php">ADMIN HOMEPAGE</a></li>
 			<li><a href="userView.php">USER VIEW</a></li>
+			<li><a href="movieUpdate.php">UPDATE MOVIES</a></li>
+			<li><a href="theatreUpdate.php">UPDATE THEATRES</a></li>
 			<li><a href="popular.php">MOST POPULAR</a></li>
-			<li><a href="movieUpdate.php">UPDATE OR DELETE MOVIES</a></li>
 			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">LOGOUT</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
@@ -30,45 +31,40 @@ if (!isLoggedIn()) {
 </header>
 <body>
 
-<h2>Add Movie</h2>
-<form method="post" action="movieUpdate.php?action=finAdd">
-	<table>
-		<tr>
-			<td>Title</td>
-			<td><input name="addTitle"></td>
-		</tr>
-		<tr>
-			<td>RunTime</td>
-			<td><input name="addRuntime"></td>
-		</tr>
-		<tr>
-			<td>Rating</td>
-			<td><input name="addRating"></td>
-		</tr>
-		<tr>
-			<td>Synopsis</td>
-			<td><textarea name="addSynopsis" rows="8" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td>DirFName</td>
-			<td><input name="addDirF"></td>
-		</tr>
-		<tr>
-			<td>DirLName</td>
-			<td><input name="addDirL"></td>
-		</tr>
-		<tr>
-			<td>ProdCompName</td>
-			<td><input name="addProd"></td>
-		</tr>
-		<tr>
-			<td>SuplName</td>
-			<td><input name="addSupl"></td>
-		</tr>
-		<tr>
-			<td class=\"tableLink\"></td>
-			<td class=\"tableLink\"><input type="submit" name="addMovie"></td>
-		</tr>
-	</table>
+<div class="header"><h1>Add Movie</h1></div>
+<form method="post" action="movieUpdate.php?action=finAdd" class="content">
+	<div class="input-group">
+		<label>Title</label>
+		<input name="addTitle">
+	</div>
+	<div class="input-group">
+		<label>Runtime</label>
+		<input name="addRuntime">
+	</div>
+	<div class="input-group">
+		<label>Rating</label>
+		<input name="addRating">
+	</div>
+	<div class="input-group">
+		<label>Synopsis</label>
+		<textarea name="addSynopsis" rows="5" style="min-width:100%;"></textarea>
+	</div>
+	<div class="input-group">
+		<label>Director's First Name</label>
+		<input name="addDirF">
+	</div>
+	<div class="input-group">
+		<label>Director's Last Name</label>
+		<input name="addDirL">
+	</div>
+	<div class="input-group">
+		<label>Production Company</label>
+		<input name="addProd">
+	</div>
+	<div class="input-group">
+		<label>Supplier</label>
+		<input name="addSupl">
+	</div>	
+	<input type="submit" name="addMovie">
 </form>
 

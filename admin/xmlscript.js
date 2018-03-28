@@ -14,6 +14,21 @@ function showTheatres(complexName) {
 	xmlhttp.send();
 }
 
+function showTheatres2(complexName) {
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("theatreDisplayEdit").innerHTML = this.responseText;
+		}
+	};
+	xmlhttp.open("GET", "ajax.php?t2="+complexName,true);
+	xmlhttp.send();
+}
+
 function addShowing(theatreInfo) {
 	if (window.XMLHttpRequest) {
 		xmlhttp = new XMLHttpRequest();

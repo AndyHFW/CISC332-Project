@@ -34,10 +34,10 @@ if (!isLoggedIn()) {
 </header>
 <body>
 	<div class="header">
-		<h2>Update e-mail</h2>
+		<h2>Update password</h2>
 	</div>
-	<form method="post">
-		<?php echo displayError(); ?>
+	<form method="post" class="content">
+		<div id="pwdError" class="error"></div>
 		<div class="input-group">
 			<label>Previous password</label>
 			<input type="password" name="password" value="">

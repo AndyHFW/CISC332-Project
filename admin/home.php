@@ -20,8 +20,9 @@ if (!isLoggedIn()) {
 		<ul>
 			<li><a href="home.php">ADMIN HOMEPAGE</a></li>
 			<li><a href="userView.php">USER VIEW</a></li>
+			<li><a href="movieUpdate.php">UPDATE MOVIES</a></li>
+			<li><a href="theatreUpdate.php">UPDATE THEATRES</a></li>
 			<li><a href="popular.php">MOST POPULAR</a></li>
-			<li><a href="movieUpdate.php">UPDATE OR DELETE MOVIES</a></li>
 			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">LOGOUT</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
@@ -49,13 +50,8 @@ if (!isLoggedIn()) {
 
 			<div>
 				<?php  if (isset($_SESSION['user'])) : ?>
-					<strong><?php echo $_SESSION['user']['Email']; ?></strong>
-
-					<small>
-						<i  style="color: #888;">(<?php echo ucfirst($_SESSION['user']['UserType']); ?>)</i> 
-						<br>
-						<a href="home.php?logout='1'" style="color: red;">logout</a>
-					</small>
+					<h1><?php echo $_SESSION['user']['Email']; ?></h1>
+					<h3><i  style="color: #888;">(<?php echo ucfirst($_SESSION['user']['UserType']); ?>)</i></h3>
 
 				<?php endif ?>
 			</div>

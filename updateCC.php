@@ -36,17 +36,16 @@ if (!isLoggedIn()) {
 	<div class="header">
 		<h2>Update credit card info</h2>
 	</div>
-	<form method="post">
-		<?php echo displayError(); ?>
+	<form method="post" class="content">
 		<h3>Update credit card info</h3>
 		<div class="input-group">
 			<label>Credit card number</label>
 			<input type="text" name="creditNum" value="">
 		</div>
 		<div class="input-group">
-			<label>Credit card expiry</label>
+			<label>Credit card expiry month</label>
 			<input type="text" name="creditExpMonth" value="">
-			/
+			<label>Credit card expiry year</label>
 			<input type="text" name="creditExpYear" value="">
 		</div>
 		<div class="input-group">

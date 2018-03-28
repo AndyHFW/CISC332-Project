@@ -36,14 +36,14 @@ if (!isLoggedIn()) {
 	<div class="header">
 		<h2>Update e-mail</h2>
 	</div>
-	<form method="post">
+	<form method="post" class="content">
 		<?php echo displayError(); ?>
 		<div class="input-group">
 			<label>E-mail address</label>
 			<input type="text" name="email" value="<?php echo $email; ?>">
-		</div>
-		<div class="input-group">
+			<label><br></label>
 			<button type="submit" class="button" name="updateEmailButton">Update info</button>
+		</div>
 	</form>
 </body>
 </html>

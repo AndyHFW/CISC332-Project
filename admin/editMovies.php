@@ -21,8 +21,9 @@ if (!isLoggedIn()) {
 		<ul>
 			<li><a href="home.php">ADMIN HOMEPAGE</a></li>
 			<li><a href="userView.php">USER VIEW</a></li>
+			<li><a href="movieUpdate.php">UPDATE MOVIES</a></li>
+			<li><a href="theatreUpdate.php">UPDATE THEATRES</a></li>
 			<li><a href="popular.php">MOST POPULAR</a></li>
-			<li><a href="movieUpdate.php">UPDATE OR DELETE MOVIES</a></li>
 			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">LOGOUT</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
@@ -55,42 +56,39 @@ if (!isLoggedIn()) {
 		}
 	}
 ?>
-<h2>Edit Movie - <?php echo $row ['Title']; ?><br/></h2>
-<form method="post" action="movieUpdate.php?action=finEdit">
-	<table class="form">
-		<tr>
-			<td>RunTime</td>
-			<td><input name="txt_runtime" value="<?php echo $runtime;?>"></td>
-		</tr>
-		<tr>
-			<td>Rating</td>
-			<td><input name="txt_rating" value="<?php echo $rating;?>"></td>
-		</tr>
-		<tr>
-			<td>Synopsis</td>
-			<td><textarea name="txt_synopsis" rows="8" cols="40"><?php echo $synopsis;?></textarea></td>
-		</tr>
-		<tr>
-			<td>DirFName</td>
-			<td><input name="txt_dirfname" value="<?php echo $dirfname;?>"></td>
-		</tr>
-		<tr>
-			<td>DirLName</td>
-			<td><input name="txt_dirlname" value="<?php echo $dirlname;?>"></td>
-		</tr>
-		<tr>
-			<td>ProdCompName</td>
-			<td><input name="txt_prodcompname" value="<?php echo $prodcompname;?>"></td>
-		</tr>
-		<tr>
-			<td>SuplName</td>
-			<td><input name="txt_suplname" value="<?php echo $suplname;?>"></td>
-		</tr>
-		<tr>
-			<td></td>
-			<td><input type="submit" name="btn_submit"></td>
-		</tr>
-	</table>
+<div class="header">
+<h2>Edit Movie - <?php echo $row ['Title']; ?></h2>
+</div>
+<form method="post" action="movieUpdate.php?action=finEdit" class="content">
+	<div class="input-group">
+		<label>Runtime</label>
+		<input name="txt_runtime" value="<?php echo $runtime;?>">
+	</div>
+	<div class="input-group">
+		<label>Rating</label>
+		<input name="txt_rating" value="<?php echo $rating;?>">
+	</div>
+	<div class="input-group">
+		<label>Synopsis</label>
+		<textarea name="txt_synopsis" rows="5" style="min-width:100%;"><?php echo $synopsis;?></textarea>
+	</div>
+	<div class="input-group">
+		<label>Director's First Name</label>
+		<input name="txt_dirfname" value="<?php echo $dirfname;?>">
+	</div>
+	<div class="input-group">
+		<label>Director's Last Name</label>
+		<input name="txt_dirlname" value="<?php echo $dirlname;?>">
+	</div>
+	<div class="input-group">
+		<label>Production Company</label>
+		<input name="txt_prodcompname" value="<?php echo $prodcompname;?>">
+	</div>
+	<div class="input-group">
+		<label>Supplier</label>
+		<input name="txt_suplname" value="<?php echo $suplname;?>">
+	</div>	
+	<input type="submit" name="btn_submit">	
 	<input type="hidden" name="title" value="<?php echo $_GET['id']; ?>">
 </form>
 </body>

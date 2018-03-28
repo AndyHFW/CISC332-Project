@@ -4,9 +4,26 @@ body {
 	padding: 0 !important;
 }
 
+h1 {
+	font-size: 25px;
+	font-weight: 700;
+}
+
 h2 {
 	font-size: 17px;
 	font-weight: 700;
+}
+
+h3 {
+	font-size: 17px;
+	font-weight: 700;
+	padding-left: 20px;
+}
+
+textarea {
+	font-family: Arial,sans-serif;
+	font-size: 14px;
+	margin-bottom: 10px;
 }
 
 /**************/
@@ -73,8 +90,8 @@ th, td {
 }
 
 th {
-	background-color: white;
-	color: black;
+	background-color: #5F9EA0;
+	color: white;
 	font-family: Verdana,sans-serif;
 	height: 25px;
 	font-weight: 700;
@@ -82,12 +99,12 @@ th {
 }
 
 table {
-	margin-top: 10px;
+	margin: 20px 20px;
 	border-collapse: collapse;
 }
 
 tr:nth-child(even) {
-    background-color: #f1f1f1;
+    background-color: #f7f7ff;
 }
 
 tr:nth-child(odd) {
@@ -97,10 +114,109 @@ tr:nth-child(odd) {
 .tableLink {
 	border: 0px;
 	background-color: white;
+	padding: 20px;
 }
 
 table.form>tbody>tr>td{
 	border: 0px;
 	background-color: white;
 	text-align: left;
+}
+
+/**************************/
+/* Login and Registration */
+/**************************/
+
+.header {
+	width: 60%;
+	margin: 50px auto 0px;
+	color: white;
+	background: #5F9EA0;
+	text-align: center;
+	border: 1px solid #B0C4DE;
+	border-bottom: none;
+	border-radius: 10px 10px 0px 0px;
+	padding: 20px;
+}
+
+.header>a {
+	color: white;
+}
+
+.content>form {
+	width: 60%;
+	margin: 0px auto;
+	padding: 20px;
+	border: 1px solid #B0C4DE;
+	background: white;
+	border-radius: 0px 0px 10px 10px;
+}
+
+.content {
+	width: 60%;
+	margin: 0px auto;
+	padding: 20px;
+	border: 1px solid #B0C4DE;
+	background: white;
+	border-radius: 0px 0px 10px 10px;
+}
+
+.input-group {
+	margin: 10px 0px 10px 0px;
+}
+.input-group label {
+	display: block;
+	text-align: left;
+	margin: 3px;
+}
+.input-group input {
+	height: 30px;
+	width: 93%;
+	padding: 5px 10px;
+	font-size: 16px;
+	border-radius: 5px;
+	border: 1px solid gray;
+}
+
+.error {
+	width: 92%; 
+	margin: 0px auto; 
+	padding: 10px; 
+	margin-bottom: 20px;
+	border: 1px solid #a94442; 
+	color: #a94442; 
+	background: #f2dede; 
+	border-radius: 5px; 
+	text-align: left;
+}
+
+#pwdError:empty {
+	background: transparent;
+	border: 0;
+}
+
+.links {
+	width: 92%; 
+	margin: 0px auto; 
+	margin-top: 10px;
+	padding: 10px; 
+	border: 1px solid #5F9EA0; 
+	color: white; 
+	background: #5F9EA0; 
+	border-radius: 5px; 
+	text-align: left;
+}
+
+.links>a {
+	color: white;
+	line-height: 1.5;
+}
+
+.list {
+	line-height: 1.5;
+}
+
+.whiteList>tbody>tr {
+	background-color:white;
+	border: 0px;
 }

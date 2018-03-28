@@ -20,18 +20,19 @@ if (!isLoggedIn()) {
 		<ul>
 			<li><a href="home.php">ADMIN HOMEPAGE</a></li>
 			<li><a href="userView.php">USER VIEW</a></li>
+			<li><a href="movieUpdate.php">UPDATE MOVIES</a></li>
+			<li><a href="theatreUpdate.php">UPDATE THEATRES</a></li>
 			<li><a href="popular.php">MOST POPULAR</a></li>
-			<li><a href="movieUpdate.php">UPDATE OR DELETE MOVIES</a></li>
 			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">LOGOUT</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>
 </header>
 <body>
-	<div class="header">
+	<div class="header" style="width:80%;">
 		<h2>User View</h2>
 	</div>
-	<div id="userDisplay">
+	<div id="userDisplay" class="content" style="width:80%;">
 		<?php
 			if (isset($_GET['action'])) {
 					if ($_GET['action'] == 'delete') {

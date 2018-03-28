@@ -261,7 +261,7 @@ function updatePassword() {
 	$passwordConfirm = md5(escape($_POST['passwordConfirm']));
 	$newPassword = md5(escape($_POST['newPassword']));
 	if ($password != $passwordConfirm) {
-		echo "Previous passwords must match <br/>";
+		echo "<script>window.onload = function(){document.getElementById('pwdError').innerHTML=\"Previous passwords must match <br/>\"}</script>";
 	} else {
 		$query = "SELECT * FROM user WHERE AccNum='{$_SESSION['user']['AccNum']}' AND PWD='{$password}' LIMIT 1";
 		$results = mysqli_query($db, $query);
@@ -272,7 +272,7 @@ function updatePassword() {
 			$result = mysqli_query($db, $query);
 			header('location: index.php?update=pwd');
 		} else {
-			echo "Previous password is incorrect<br/>";
+			echo "<script>window.onload = function(){document.getElementById('pwdError').innerHTML=\"Previous password is incorrect <br/>\"}</script>";
 		}
 	}
 }
@@ -301,8 +301,18 @@ function getComplexes($buttonType="movie") {
 			echo "<td>" . $row['PhoneNum'] . "</td>";
 			if ($buttonType=="movie"){
 				echo "<td class=\"tableLink\"><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showMovies('" . $complexName . "')\">Select Complex</button></td>";	
-			} else {
+			} else if ($buttonType=="theatres"){
 				echo "<td class=\"tableLink\"><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showTheatres('" . $complexName . "')\">Select Complex</button></td>";	
+			} else {
+				echo "<td class=\"tableLink\">
+					<form action=\"editComplex.php\" method=\"post\">
+						<input type=\"hidden\" name=\"complexEditName\" value=\"{$complexName}\">
+						<button type=\"submit\" name=\"editComplexButton\">Edit Complex</button></form></td>";	
+				echo "<td class=\"tableLink\"><button type=\"button\" name=\"seeTheatres" . $complexNum . "\" onclick=\"showTheatres2('" . $complexName . "')\">See Theatres</button></td>";
+				echo "<td class=\"tableLink\">
+					<form action=\"addTheatre.php\" method=\"post\">
+					<input type=\"hidden\" name=\"addTheatreName\" value=\"{$complexName}\">
+					<button type=\"submit\" name=\"addTheatreButtonInFunc\">Add Theatre</button></form></td>";					
 			}
 			
 			echo "</tr>";
@@ -328,7 +338,7 @@ function showMovies($complexName) {
 		echo $query;
 	} else {
 		echo "
-		<caption>" . $complexName . "</caption>
+		<h3>" . $complexName . "</h3>
 		<table>
 			<tr>
 			<th>Theatre Number</th>
@@ -354,7 +364,7 @@ function showMovies($complexName) {
 		}
 }
 
-function showTheatres($complexName) {
+function showTheatres($complexName, $flag="chooseTheatre") {
 	global $db;
 	$query = "SELECT `TheatreNum`, `MaxSeat`, `ScreenSize` FROM `theatre` WHERE `CplName`='{$complexName}';";
 	$result = mysqli_query($db, $query);
@@ -363,7 +373,7 @@ function showTheatres($complexName) {
 		echo $query;
 	} else {
 		echo "
-		<caption>" . $complexName . "</caption>
+		<h3>" . $complexName . "</h3>
 		<table>
 			<tr>
 			<th>Theatre Number</th>
@@ -376,7 +386,15 @@ function showTheatres($complexName) {
 				echo "<td>" . $row['TheatreNum'] . "</td>";
 				echo "<td>" . $row['MaxSeat'] . "</td>";
 				echo "<td>" . $row['ScreenSize'] . "</td>";
-				echo "<td class=\"tableLink\"><button type=\"button\" class=\"addShowing\" onclick=\"addShowing('" . $showingInfo . "')\"\">Choose Theatre</button></td>";
+				if ($flag=="chooseTheatre"){
+					echo "<td class=\"tableLink\"><button type=\"button\" class=\"addShowing\" onclick=\"addShowing('" . $showingInfo . "')\"\">Choose Theatre</button></td>";
+				} else {
+					echo "<td class=\"tableLink\"><form action=\"editTheatres.php\" method=\"post\">
+					<input type=\"hidden\" name=\"theatreEditComplex\" value=\"{$complexName}\">
+					<input type=\"hidden\" name=\"theatreEditNum\" value=\"{$row['TheatreNum']}\">
+					<button type=\"submit\" name=\"editTheatreButtonInFunc\">Edit Theatre</button></form></td>
+					";
+				}
 				echo "</tr>";
 			}
 		echo "</table>";
@@ -420,18 +438,20 @@ function showTickets($showingInfo, $infoString) {
 	global $db;
 	echo "
 	<div id=\"buyTicketInfo\">
-		Movie: <a href='./movieInfo.php?title={$showingInfo[0]}' target='_blank'>{$showingInfo[0]}</a><br/>
-		Complex: " . $showingInfo[1] . "<br/>
-		Theatre Number: " . $showingInfo[2] . "<br/>
-		Start Time: " . $showingInfo[3] . "<br/>
-		Max Capacity: " . $showingInfo[5] . "<br/>
-	</div>
+		<table class=\"whiteList\">
+		<tr><td>Movie:</td><td><a href='./movieInfo.php?title={$showingInfo[0]}' target='_blank'>{$showingInfo[0]}</a></td></tr>
+		<tr><td>Complex:</td><td>" . $showingInfo[1] . "</td></tr>
+		<tr><td>Theatre Number:</td><td>" . $showingInfo[2] . "</td></tr>
+		<tr><td>Start Time:</td><td>" . $showingInfo[3] . "</td></tr>
+		<tr><td>Max Capacity:</td><td>" . $showingInfo[5] . "</td></tr>
 	<form onsubmit=\"return false;\" method=\"post\" name=\"dateForm\">
-		<label>Choose Date: </label>
-		<input type=\"date\" id=\"chosenDate\" name=\"date\" value=\"" . date("Y-m-d") . "\" max=\"" . $showingInfo[4] . "\">
-		<input type=\"hidden\" id=\"hideShowingInfo\" name=\"hideShowingInfo\" value=\"{$infoString}\">
-		<button type=\"submit\" name=\"chooseDateButton\" onclick=\"chooseDateFunction()\">Choose Date</button>
-	</form>";
+		<tr><td>Choose Date: </td>
+		<td><input type=\"date\" id=\"chosenDate\" name=\"date\" value=\"" . date("Y-m-d") . "\" max=\"" . $showingInfo[4] . "\">
+		<input type=\"hidden\" id=\"hideShowingInfo\" name=\"hideShowingInfo\" value=\"{$infoString}\"></td></tr>
+		<tr><td colspan=\"2\"><button type=\"submit\" name=\"chooseDateButton\" onclick=\"chooseDateFunction()\">Choose Date</button></td></tr>
+	</form>
+	</table>
+	</div>";
 }
 
 function buyTickets($showingInfo) {
@@ -504,8 +524,8 @@ function showPurchases($userNum='-1') {
 		echo $query;
 	} else {
 		echo "
-		<h2>Purchase history of user {$userNum}:</h2>
-		<table>
+		<div class=\"header\" style=\"width:80%;\"><h2>Purchase history of user {$userNum}:</h2></div>
+		<table style=\"width:80%; margin-left:10%; margin-right:10%;\">
 			<tr>
 			<th>Movie</th>
 			<th>Date</th>
@@ -567,8 +587,10 @@ function reviewMovie() {
 	$query = "SELECT `Rating`, `Text` FROM `review` WHERE `MovTitle`='{$movie}' AND `AccountNum`='{$_SESSION['user']['AccNum']}' LIMIT 1";
 	$result = mysqli_query($db, $query);
 	if (!$result) {
-		echo "Review for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a>: <br/>
-		<form method=\"post\" action=\"index.php?action=finReview\">
+		echo "<div class=\"header\">
+			Review for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a>:
+			</div>
+			<form method=\"post\" action=\"index.php?action=finReview\" class=\"content\">
 			<input type=\"hidden\" name=\"movieForReview\" value=\"{$movie}\">
 			<label>Rating: </label>
 			<input type=\"number\" name=\"rating\" min=\"1\" max=\"10\" value=\"1\"><br/><br/>
@@ -578,8 +600,10 @@ function reviewMovie() {
 		";
 	} else {
 		$reviewInfo = mysqli_fetch_assoc($result);
-		echo "Review for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a>: <br/>
-		<form method=\"post\" action=\"index.php?action=finReview\">
+		echo "<div class=\"header\">
+			Review for <a href='./movieInfo.php?title={$movie}' target='_blank'>{$movie}</a>:
+			</div>
+			<form method=\"post\" action=\"index.php?action=finReview\" class=\"content\">
 			<input type=\"hidden\" name=\"movieForReview\" value=\"{$movie}\">
 			<label>Rating: </label>
 			<input type=\"number\" name=\"rating\" min=\"1\" max=\"10\" value=\"{$reviewInfo['Rating']}\"><br/><br/>
@@ -654,24 +678,19 @@ function movieInfo($movie) {
 		echo $query;
 	} else {
 		echo "
-		<div class=\"columnOne\">
-		<table>";
+		<div class=\"header\"><h1>{$movie}</h1></div>
+		<div>
+		<table class=\"content\" style=\"margin-top: 20px;\">";
 			while($row = mysqli_fetch_array($result)) {
-				echo "<tr><td>Title</td><td>{$row['Title']}</td></tr>";
 				echo "<tr><td>Runtime</td><td>{$row['RunTime']}</td></tr>";
 				echo "<tr><td>Rating</td><td>{$row['Rating']}</td></tr>";
 				echo "<tr><td>Director</td><td>{$row['DirName']}</td></tr>";
 				echo "<tr><td>Production Company</td><td>{$row['ProdCompName']}</td></tr>";
 				echo "<tr><td>Supplier</td><td>{$row['SuplName']}</td></tr>";
 				$synopsis = $row['Synopsis'];
+				echo "<tr><td colspan=\"2\">{$synopsis}</td></tr>";
 			}
-		echo "</table>
-		</div>
-		<div class=\"columnTwo\">
-			Synopsis:<br/>
-			<p>{$synopsis}</p>
-		</div>
-		";
+		echo "</table>";
 	}
 }
 
@@ -681,7 +700,7 @@ function getUsers() {
 	$query = "SELECT AccNum,Street,City,Province,Postal,Email,PNum FROM `user` WHERE UserType = 'user'";
 	$result = mysqli_query($db, $query);
 	echo "
-	<table>
+	<table style=\"width:80%; margin-left:10%; margin-right:10%;\">
 		<tr>
 		<th>Account Number</th>
 		<th>Address</th>
@@ -730,12 +749,13 @@ function popularMovie() {
 				ORDER BY totalTickets DESC 
 				LIMIT 1;";
 	$result = mysqli_query($db, $query);
-	echo "Most popular movie: ";
+	echo "<table style=\"width:80%; margin-left:10%; margin-right:10%;\">
+	<tr><td>Most popular movie:</td>";
 	if (!$result) {
 		echo "Could not find the most popular movie, please try again later.";
 	} else {
 		$row = mysqli_fetch_assoc($result);
-		echo "{$row['MovTitle']} ({$row['totalTickets']}) <br/>";
+		echo "<td>{$row['MovTitle']} ({$row['totalTickets']})</td></tr>";
 	}
 }
 
@@ -747,12 +767,12 @@ function popularComplex() {
 				ORDER BY totalTickets DESC 
 				LIMIT 1;";
 	$result = mysqli_query($db, $query);
-	echo "Most popular theatre complex: ";
+	echo "<tr><td>Most popular theatre complex:</td>";
 	if (!$result) {
 		echo "Could not find the most popular theatre complex, please try again later.";
 	} else {
 		$row = mysqli_fetch_assoc($result);
-		echo "{$row['CplName']} ({$row['totalTickets']}) <br/>";
+		echo "<td>{$row['CplName']} ({$row['totalTickets']})</td></tr>";
 	}
 }
 ?>

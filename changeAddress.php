@@ -35,8 +35,7 @@ if (!isLoggedIn()) {
 	<div class="header">
 		<h2>Update user address</h2>
 	</div>
-	<form method="post">
-		<?php echo displayError(); ?>
+	<form method="post" class="content">
 		<h3>Update Address</h3>
 		<div class="input-group">
 			<label>Street</label>

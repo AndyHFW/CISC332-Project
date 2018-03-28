@@ -16,18 +16,12 @@
 	<script src="jquery-3.2.1.min.js"></script>-->
 </head>
 <header>
-	<nav>
-		<ul>
-			<li><a href="./index.php">Home</a></li>
-			<!--<li><a href="./instructions.html">Instructions</a></li>-->
-		</ul>
-	</nav>
 </header>
 <body>
 	<div class="header">
-		<h2>Register</h2>
+		<h1>Register</h1>
 	</div>
-	<form method="post" action="register.php">
+	<form method="post" action="register.php" class="content">
 		<?php echo displayError(); ?>
 		<div class="input-group">
 			<label>E-mail address</label>
@@ -41,7 +35,7 @@
 			<label>Confirm password</label>
 			<input type="password" name="passwordConfirm" value="">
 		</div>
-		<h3>Address</h3>
+		<h2>Address</h2>
 		<div class="input-group">
 			<label>Street</label>
 			<input type="text" name="street" value="<?php echo $street; ?>">
@@ -77,19 +71,20 @@
 			<label>Phone number</label>
 			<input type="text" name="phoneNum" value="<?php echo $phoneNum; ?>">
 		</div>
-		<h3>Credit card info</h3>
+		<h2>Credit card info</h2>
 		<div class="input-group">
 			<label>Credit card number</label>
 			<input type="text" name="creditNum" value="">
 		</div>
 		<div class="input-group">
-			<label>Credit card expiry</label>
+			<label>Credit card expiry month</label>
 			<input type="text" name="creditExpMonth" value="">
-			/
+			<label>Credit card expiry year</label>
 			<input type="text" name="creditExpYear" value="">
 		</div>
 		<div class="input-group">
 			<button type="submit" class="button" name="registerButton">Register</button>
+		</div>
 	<p>
 		Already a member? <a href="login.php">Sign in</a>
 	</p>

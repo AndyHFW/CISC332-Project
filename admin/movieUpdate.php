@@ -21,8 +21,9 @@ if (!isLoggedIn()) {
 		<ul>
 			<li><a href="home.php">ADMIN HOMEPAGE</a></li>
 			<li><a href="userView.php">USER VIEW</a></li>
-			<li><a href="popular.php">MOST POPULAR</a></li>
 			<li><a href="movieUpdate.php">UPDATE MOVIES</a></li>
+			<li><a href="theatreUpdate.php">UPDATE THEATRES</a></li>
+			<li><a href="popular.php">MOST POPULAR</a></li>
 			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">LOGOUT</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
@@ -30,7 +31,7 @@ if (!isLoggedIn()) {
 </header>
 <body>
 	
-	<h2>Movie Lists</h2>
+	<h1 style="padding-left:20px;">Movie List</h1><br/>
 	<a href="addMovies.php"><h3>Add Movie</h3></a><br/>
 	<a href="addShowings.php"><h3>Add Showings</h3></a><br/>
 <?php

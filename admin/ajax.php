@@ -19,6 +19,9 @@
 	} else if (isset($_GET['t'])) {
 		$t = $_GET['t'];
 		showTheatres($t);
+	} else if (isset($_GET['t2'])) {
+		$t = $_GET['t2'];
+		showTheatres($t,"editTheatre");
 	}
 	
 ?>

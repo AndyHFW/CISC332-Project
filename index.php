@@ -41,17 +41,14 @@
 		<?php endif ?>
 		<!-- logged in user information -->
 		<div class="profile_info">
-			<!--<img src="images/user_profile.png"  >-->
-
 			<div>
 				<?php  if (isset($_SESSION['user'])) : ?>
-					<strong><?php echo $_SESSION['user']['Email']; ?></strong>
-
-					<small>
-						<i  style="color: #888;">(<?php echo ucfirst($_SESSION['user']['UserType']); ?>)</i> 
+					<h1><?php echo $_SESSION['user']['Email']; ?></h1>
+					<h3><i  style="color: #888;">(<?php echo ucfirst($_SESSION['user']['UserType']); ?>)</i></h3>
 						<br>
 							<?php
 							if (isset($_GET['update'])) {
+								echo "<div class=\"error\">";
 								if ($_GET['update'] == 'address') {
 									echo "Address successfully updated!<br/>";
 								} else if ($_GET['update'] == 'cc') {
@@ -63,20 +60,22 @@
 								} else if ($_GET['update'] == 'review') {
 									echo "New review added!<br/>";
 								}
+								echo "</div>";
 							} else if (isset($_GET['action'])) {
+								echo "<div class=\"error\">";
 								if ($_GET['action'] == 'finReview') {
 									finishReview();
 								}
+								echo "</div>";
 							}
 							?>
+							
+							<div class="links">
 							<a href="./updateEmail.php">Update e-mail</a><br/>
 							<a href="./updatePWD.php">Change password</a><br/>
 							<a href="./changeAddress.php">Update address</a><br/>
 							<a href="./updateCC.php">Update credit card info</a><br/>
-						<br>
-						<a href="index.php?logout='1'" style="color: red;">logout</a>
-					</small>
-
+							</div>
 				<?php endif ?>
 			</div>
 		</div>
