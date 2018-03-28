@@ -13,6 +13,7 @@ if (isset($_GET['title'])) {
 	<meta name="author" content="Andy Wang"/>
 	<meta name="description" content="Information about <?php echo $movie; ?>"/>
 	<meta name="viewport" content="width=device-width" />
+	<link rel="stylesheet" href="reset.css">
 	<link rel="stylesheet" href="OMTS.css">
 	<!--<link rel="stylesheet" href="reset.css">
 	<script src="flashcardJS.js"></script>

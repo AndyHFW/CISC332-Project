@@ -305,7 +305,7 @@ function getComplexes() {
 			echo "<td>" . $row['NumTheatres'] . "</td>";
 			echo "<td>" . $row['Street'] . "<br/> " . $row['City'] . ", " . $row['Province'] . "<br/> " . $row['Postal'] . "</td>";
 			echo "<td>" . $row['PhoneNum'] . "</td>";
-			echo "<td><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showMovies('" . $complexName . "')\">Select Complex</button></td>";
+			echo "<td class=\"tableLink\"><button type=\"button\" name=\"complex" . $complexNum . "\" onclick=\"showMovies('" . $complexName . "')\">Select Complex</button></td>";
 			echo "</tr>";
 			$complexNum++;
 		}
@@ -348,7 +348,7 @@ function showMovies($complexName) {
 				echo "<td>" . $row['MaxSeat'] . "</td>";
 				echo "<td>" . $row['ScreenSize'] . "</td>";
 				echo "<td>" . $row['ED'] . "</td>";
-				echo "<td><button type=\"button\" class=\"buyTicket\" onclick=\"buyTicket('" . $showingInfo . "')\"\">Buy Tickets</button></td>";
+				echo "<td class=\"tableLink\"><button type=\"button\" class=\"buyTicket\" onclick=\"buyTicket('" . $showingInfo . "')\"\">Buy Tickets</button></td>";
 				echo "</tr>";
 			}
 		echo "</table>";
@@ -450,7 +450,7 @@ function showPurchases($userNum='-1') {
 		echo $query;
 	} else {
 		echo "
-		<caption>Purchase history of user {$userNum}:</br></caption>
+		<h2>Purchase history of user {$userNum}:</h2>
 		<table>
 			<tr>
 			<th>Movie</th>
@@ -492,8 +492,8 @@ function showPurchases($userNum='-1') {
 				echo "<td>" . $row['CplName'] . "</td>";
 				echo "<td>" . $row['ThrNum'] . "</td>";
 				if ($set==false) {
-					echo "<td>" . $buttonInfo[$buttonNum] . "</td>";
-					echo "<td>" . $reviewInfo[$buttonNum] . "</td>";
+					echo "<td class=\"tableLink\">" . $buttonInfo[$buttonNum] . "</td>";
+					echo "<td class=\"tableLink\">" . $reviewInfo[$buttonNum] . "</td>";
 				}
 				echo "</tr>";
 				$buttonNum++;
@@ -641,8 +641,8 @@ function getUsers() {
 			echo "<td>" . $row['Street'] . "<br/> " . $row['City'] . ", " . $row['Province'] . "<br/> " . $row['Postal'] . "</td>";
 			echo "<td>" . $row['Email'] . "</td>";
 			echo "<td>" . $row['PNum'] . "</td>";
-			echo "<td><a href=\"userHistory.php?user={$selectedUser}\">Purchase History</a></td>";
-			echo "<td><form method=\"post\" action=\"userView.php?action=delete\"><input type=\"hidden\" name=\"userID{$selectedNum}\" value=\"{$selectedUser}\">
+			echo "<td class=\"tableLink\"><a href=\"userHistory.php?user={$selectedUser}\">Purchase History</a></td>";
+			echo "<td class=\"tableLink\"><form method=\"post\" action=\"userView.php?action=delete\"><input type=\"hidden\" name=\"userID{$selectedNum}\" value=\"{$selectedUser}\">
 					<button type=\"submit\" class=\"button\" name=\"deleteUser{$selectedNum}\">Delete User</button>
 					</form>";
 			echo "</tr>";

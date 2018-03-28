@@ -1,6 +1,31 @@
+body {
+	background-color: white;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+h2 {
+	font-size: 17px;
+	font-weight: 700;
+}
+
 /**************/
 /* Navigation */
 /**************/
+
+header {
+	padding: 0;
+	margin-bottom: 15px;
+}
+
+nav {
+	background-color: #333;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	letter-spacing: 1px;
+	font-family: "Segoe UI",Arial,sans-serif;
+	font-size: 17px;
+}
 
 nav ul{
 	overflow: hidden;
@@ -17,15 +42,14 @@ nav ul li {
 nav ul li a {
 	display: inline-block;
 	color: #fff;
-	background-color: #000;
-	font-weight: bold;
+	background-color: #333;
 	text-decoration: none;
 	padding: 5px 20px;
 }
 
 nav ul li a:hover {
-	color: #000;
-	background-color: #ddd;
+	color: white;
+	background-color: #008CBA;
 }
 
 .columnOne, .columnTwo {
@@ -41,6 +65,42 @@ nav ul li a:hover {
 	width: 70%;
 }
 
-table, th, td {
+th, td {
 	border: 1px solid black;
+	padding: 5px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+th {
+	background-color: white;
+	color: black;
+	font-family: Verdana,sans-serif;
+	height: 25px;
+	font-weight: 700;
+	font-size: 15px;
+}
+
+table {
+	margin-top: 10px;
+	border-collapse: collapse;
+}
+
+tr:nth-child(even) {
+    background-color: #f1f1f1;
+}
+
+tr:nth-child(odd) {
+    background-color: white;
+}
+
+.tableLink {
+	border: 0px;
+	background-color: white;
+}
+
+table.form>tbody>tr>td{
+	border: 0px;
+	background-color: white;
+	text-align: left;
 }

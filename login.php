@@ -7,6 +7,8 @@
 	<meta name="author" content="Andy Wang"/>
 	<meta name="description" content="User login for the OMTS system."/>
 	<meta name="viewport" content="width=device-width" />
+	<link rel="stylesheet" href="reset.css">
+	<link rel="stylesheet" href="OMTS.css">
 </head>
 <body>
 	<div class="header">

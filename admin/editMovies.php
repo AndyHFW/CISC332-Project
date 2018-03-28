@@ -13,22 +13,22 @@ if (!isLoggedIn()) {
 <html>
 <head>
 	<title>Edit movie</title>
+	<link rel="stylesheet" href="../reset.css">
 	<link rel="stylesheet" type="text/css" href="../OMTS.css">
 </head>
 <header>
 	<nav>
 		<ul>
-			<li><a href="home.php">Admin homepage</a></li>
-			<li><a href="userView.php">User view</a></li>
-			<li><a href="popular.php">Most popular</a></li>
-			<li><a href="movieUpdate.php">Update or delete movies</a></li>
-			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">Logout</a></li>
+			<li><a href="home.php">ADMIN HOMEPAGE</a></li>
+			<li><a href="userView.php">USER VIEW</a></li>
+			<li><a href="popular.php">MOST POPULAR</a></li>
+			<li><a href="movieUpdate.php">UPDATE OR DELETE MOVIES</a></li>
+			<li><a href="<?php echo basename($_SERVER['PHP_SELF']); ?>?logout='1'">LOGOUT</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>
 </header>
 <body>
-<h2>Edit Movie</h2>
 <?php 	
 	$db = mysqli_connect('localhost', 'root', '', 'omts56');
 	$title = '';
@@ -55,9 +55,9 @@ if (!isLoggedIn()) {
 		}
 	}
 ?>
-
+<h2>Edit Movie - <?php echo $row ['Title']; ?><br/></h2>
 <form method="post" action="movieUpdate.php?action=finEdit">
-	<table>
+	<table class="form">
 		<tr>
 			<td>RunTime</td>
 			<td><input name="txt_runtime" value="<?php echo $runtime;?>"></td>
