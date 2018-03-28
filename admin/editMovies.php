@@ -1,22 +1,35 @@
-<?php 
-	include('../functions.php');
-	if (!isLoggedIn()) {
-		$loggedIn = false;
-	} else {
-		$loggedIn = true;
-	}
-	
+<?php
+include('../functions.php');
+if (!isLoggedIn()) {
+	$_SESSION['msg'] = "You must log in first";
+	header('location: ../login.php');
+} else if (!isAdmin()) {
+	$_SESSION['msg'] = "Insufficient permissions to access this page";
+	header('location: ../index.php');
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<link rel="stylesheet" type="text/css" href="../OMTS.css">
+</head>
+<header>
+	<nav>
+		<ul>
+			<li><a href="home.php">Admin homepage</a></li>
+			<li><a href="userView.php">User view</a></li>
+			<li><a href="popular.php">Most popular</a></li>
+			<li><a href="movieUpdate.php">Update or delete movies</a></li>
+			<!--<li><a href="./instructions.html">Instructions</a></li>-->
+		</ul>
+	</nav>
+</header>
+<body>
+<h2>Edit Movie</h2>
+<?php 	
 	$db = mysqli_connect('localhost', 'root', '', 'omts56');
-	if (isset($_POST['btn_submit'])){
-       $query = "update `movie` set RunTime = '".$_POST['txt_runtime']."',
-	                                Rating = '".$_POST['txt_rating']."',
-									Synopsis = '".$_POST['txt_synopsis']."',
-									DirFName = '".$_POST['txt_dirfname']."',
-									DirLName = '".$_POST['txt_dirlname']."',
-									ProdCompName= '".$_POST['txt_prodcompname']."',
-									SuplName = '".$_POST['txt_suplname']."',
-	   ";
-	}
 	$title = '';
 	$runtime = '';
 	$rating = '';
@@ -26,10 +39,10 @@
 	$prodcompname = '';
 	$suplname = '';
 	if (isset($_GET['id'])) {
-		$query =  "SELECT * FROM `movie` where Title=" .$_GET['id'];
+		$query =  "SELECT * FROM `movie` where Title='{$_GET['id']}'";
 		$result = mysqli_query($db, $query);
 		if(mysqli_num_rows($result) > 0) {
-			$row = mysqlifetch_assoc($result);
+			$row = mysqli_fetch_assoc($result);
 			$id = $row ['Title'];
 			$runtime = $row ['RunTime'];
 			$rating = $row ['Rating'];
@@ -42,41 +55,42 @@
 	}
 ?>
 
-<h2>Edit Movie</h2>
-<form action="" method="post">
+<form method="post" action="movieUpdate.php?action=finEdit">
 	<table>
 		<tr>
 			<td>RunTime</td>
-			<td><input name="txt_runtime" value="<?=$runtime?>"></td>
+			<td><input name="txt_runtime" value="<?php echo $runtime;?>"></td>
 		</tr>
 		<tr>
 			<td>Rating</td>
-			<td><input name="txt_rating" value="<?=$rating?>"></td>
+			<td><input name="txt_rating" value="<?php echo $rating;?>"></td>
 		</tr>
 		<tr>
 			<td>Synopsis</td>
-			<td><input name="txt_synopsis" value="<?=$synopsis?>"></td>
+			<td><textarea name="txt_synopsis" rows="8" cols="40"><?php echo $synopsis;?></textarea></td>
 		</tr>
 		<tr>
 			<td>DirFName</td>
-			<td><input name="txt_dirfname" value="<?=$dirfname?>"></td>
+			<td><input name="txt_dirfname" value="<?php echo $dirfname;?>"></td>
 		</tr>
 		<tr>
 			<td>DirLName</td>
-			<td><input name="txt_dirlname" value="<?=$dirlname?>"></td>
+			<td><input name="txt_dirlname" value="<?php echo $dirlname;?>"></td>
 		</tr>
 		<tr>
 			<td>ProdCompName</td>
-			<td><input name="txt_prodcompname" value="<?=$prodcompname?>"></td>
+			<td><input name="txt_prodcompname" value="<?php echo $prodcompname;?>"></td>
 		</tr>
 		<tr>
 			<td>SuplName</td>
-			<td><input name="txt_suplname" value="<?=$suplname?>"></td>
+			<td><input name="txt_suplname" value="<?php echo $suplname;?>"></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td><input type="submit" name="btn_submit"></td>
 		</tr>
 	</table>
+	<input type="hidden" name="title" value="<?php echo $_GET['id']; ?>">
 </form>
-
+</body>
+</html>

@@ -531,7 +531,7 @@ function reviewMovie() {
 function finishReview() {
 	global $db, $review;
 	$rating = $_POST['rating'];
-	$review = $_POST['reviewInput'];
+	$review = mysqli_real_escape_string($db,$_POST['reviewInput']);
 	$movie = $_POST['movieForReview'];
 	//var_dump($_POST);
 	$query = "SELECT `Rating`, `Text` FROM `review` WHERE `MovTitle`='{$movie}' AND `AccountNum`='{$_SESSION['user']['AccNum']}' LIMIT 1";
@@ -656,7 +656,7 @@ function deleteUser(){
 	$result = mysqli_query($db, $query);
 	echo $query;
 	if (!$result) echo "broken";
-	//header("Location: /userView.php");
+	header("Location: /userView.php");
 }
 
 // May or may not break if more than one movie/complex has the same number of tickets

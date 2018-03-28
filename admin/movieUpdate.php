@@ -1,17 +1,76 @@
-
-<?php 
-	include('../functions.php');
-	if (!isLoggedIn()) {
-		$loggedIn = false;
-	} else {
-		$loggedIn = true;
-	}
-	
-	$db = mysqli_connect('localhost', 'root', '', 'omts56');
+<?php
+include('../functions.php');
+if (!isLoggedIn()) {
+	$_SESSION['msg'] = "You must log in first";
+	header('location: ../login.php');
+} else if (!isAdmin()) {
+	$_SESSION['msg'] = "Insufficient permissions to access this page";
+	header('location: ../index.php');
+}
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<link rel="stylesheet" type="text/css" href="../OMTS.css">
+</head>
+<header>
+	<nav>
+		<ul>
+			<li><a href="home.php">Admin homepage</a></li>
+			<li><a href="userView.php">User view</a></li>
+			<li><a href="popular.php">Most popular</a></li>
+			<li><a href="movieUpdate.php">Update or delete movies</a></li>
+			<!--<li><a href="./instructions.html">Instructions</a></li>-->
+		</ul>
+	</nav>
+</header>
+<body>
 	
 	<h2>Movie Lists</h2>
-	<a href="addMovies.php">Add New</a><br/><br/>
+	<a href="addMovies.php"><h3>Add Movie</h3></a><br/>
+<?php
+	if (isset($_GET['action'])) {
+		if ($_GET['action'] == "finEdit") {
+			if (isset($_POST['btn_submit'])){
+				$synopsis = mysqli_real_escape_string($db,$_POST['txt_synopsis']);
+				$query = "update `movie` set `RunTime`='{$_POST['txt_runtime']}',
+							`Rating`='{$_POST['txt_rating']}',
+							`Synopsis`='{$synopsis}',
+							`DirFName`='{$_POST['txt_dirfname']}',
+							`DirLName`='{$_POST['txt_dirlname']}',
+							`ProdCompName`='{$_POST['txt_prodcompname']}',
+							`SuplName`='{$_POST['txt_suplname']}' 
+							WHERE `Title`='{$_POST['title']}';";
+				$result = mysqli_query($db, $query);
+				if (!$result) {
+					echo "broken";
+				} else {
+					echo "Edit successful!<br/>";
+				
+				}
+				//echo $query;
+			}
+		} else if ($_GET['action'] == "finAdd") {
+			if (isset($_POST['addMovie'])){
+				$synopsis = mysqli_real_escape_string($db,$_POST['addSynopsis']);
+				$query = "INSERT INTO `movie`(`Title`, `RunTime`, `Rating`, `Synopsis`, 
+						`DirFName`, `DirLName`, `ProdCompName`, `SuplName`)
+						VALUES ('{$_POST['addTitle']}','{$_POST['addRuntime']}','{$_POST['addRating']}',
+						'{$synopsis}','{$_POST['addDirF']}','{$_POST['addDirL']}','{$_POST['addProd']}',
+						'{$_POST['addSupl']}');";
+				$result = mysqli_query($db, $query);
+				if (!$result) {
+					//echo "broken";
+				} else {
+					echo "Movie added successfully!<br/>";
+				}
+				//echo $query;
+			}
+		}
+	}
+?>
 	<table border="1" cellspacing="0" cellpadding="5px">
 	  <tr>
 		<th>Title</th>
@@ -40,8 +99,8 @@
 		<td><?=$row['ProdCompName']?></td>
 		<td><?=$row['SuplName']?></td>
 		<td>
-		    <a href="editMovies.php?id=<?=$row['Title']?>">Edit</a>
-			<a href="deleteMovies.php?id=$row['Title']?>">Delete</a>
+		    <a href="editMovies.php?id=<?php echo $row['Title'];?>">Edit</a>
+			<a href="deleteMovies.php?id=<?php echo $row['Title'];?>">Delete</a>
 		</td>
 	  </tr>
 	  <?php
@@ -50,4 +109,5 @@
 		 }
 	  ?>
 	 </table>
-
+</body>
+</html>

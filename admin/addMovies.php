@@ -1,57 +1,71 @@
-<?php 
-	include('../functions.php');
-	if (!isLoggedIn()) {
-		$loggedIn = false;
-	} else {
-		$loggedIn = true;
-	}
-	
-	$db = mysqli_connect('localhost', 'root', '', 'omts56');
-	if (isset($_POST['btn_submit'])){
-		$sql = "insert into movie(Title, RunTime, Rating, Synopsis, DirFName, DirLName, ProdCompName, SuplName)
-		         values ('".$_POST['txt_title']."', '".$_POST['txt_runtime']."', '".$_POST['txt_rating']."','".$_POST['txt_synopsis']."','".$_POST['txt_dirfname']."', '".$_POST['txt_dirlname']."', '".$_POST['txt_prodcompname']."', '".$_POST['txt_suplname']."')";
-		
-	}
+<?php
+include('../functions.php');
+if (!isLoggedIn()) {
+	$_SESSION['msg'] = "You must log in first";
+	header('location: ../login.php');
+} else if (!isAdmin()) {
+	$_SESSION['msg'] = "Insufficient permissions to access this page";
+	header('location: ../index.php');
+}
 ?>
 
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+	<link rel="stylesheet" type="text/css" href="../OMTS.css">
+</head>
+<header>
+	<nav>
+		<ul>
+			<li><a href="home.php">Admin homepage</a></li>
+			<li><a href="userView.php">User view</a></li>
+			<li><a href="popular.php">Most popular</a></li>
+			<li><a href="movieUpdate.php">Update or delete movies</a></li>
+			<!--<li><a href="./instructions.html">Instructions</a></li>-->
+		</ul>
+	</nav>
+</header>
+<body>
+
 <h2>Add Movie</h2>
-<form action="" method="post">
+<form method="post" action="movieUpdate.php?action=finAdd">
 	<table>
 		<tr>
 			<td>Title</td>
-			<td><input name="txt_title"></td>
+			<td><input name="addTitle"></td>
 		</tr>
 		<tr>
 			<td>RunTime</td>
-			<td><input name="txt_runtime"></td>
+			<td><input name="addRuntime"></td>
 		</tr>
 		<tr>
 			<td>Rating</td>
-			<td><input name="txt_rating"></td>
+			<td><input name="addRating"></td>
 		</tr>
 		<tr>
 			<td>Synopsis</td>
-			<td><input name="txt_synopsis"></td>
+			<td><textarea name="addSynopsis" rows="8" cols="40"></textarea></td>
 		</tr>
 		<tr>
 			<td>DirFName</td>
-			<td><input name="txt_dirfname"></td>
+			<td><input name="addDirF"></td>
 		</tr>
 		<tr>
 			<td>DirLName</td>
-			<td><input name="txt_dirlname"></td>
+			<td><input name="addDirL"></td>
 		</tr>
 		<tr>
 			<td>ProdCompName</td>
-			<td><input name="txt_prodcompname"></td>
+			<td><input name="addProd"></td>
 		</tr>
 		<tr>
 			<td>SuplName</td>
-			<td><input name="txt_suplname"></td>
+			<td><input name="addSupl"></td>
 		</tr>
 		<tr>
 			<td></td>
-			<td><input type="submit" name="btn_submit"></td>
+			<td><input type="submit" name="addMovie"></td>
 		</tr>
 	</table>
 </form>

@@ -20,6 +20,7 @@ if (!isLoggedIn()) {
 			<li><a href="home.php">Admin homepage</a></li>
 			<li><a href="userView.php">User view</a></li>
 			<li><a href="popular.php">Most popular</a></li>
+			<li><a href="movieUpdate.php">Update or delete movies</a></li>
 			<!--<li><a href="./instructions.html">Instructions</a></li>-->
 		</ul>
 	</nav>
